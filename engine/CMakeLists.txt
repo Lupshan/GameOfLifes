@@ -24,6 +24,7 @@ FetchContent_MakeAvailable(doctest)
 
 add_library(engine_core STATIC
     src/version.cpp
+    src/direction.cpp
 )
 target_include_directories(engine_core PUBLIC include)
 

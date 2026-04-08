@@ -1,8 +1,8 @@
 # 04 — World grid + primitives
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Introduce the spatial primitives every later step depends on: `Position`, `Direction`, and a toroidal `Grid<T>` storage type. Pure data, no agents, no simulation — but tested thoroughly because every bug here will haunt every later step.
@@ -26,9 +26,11 @@ Introduce the spatial primitives every later step depends on: `Position`, `Direc
 - `Position` `operator==` and `std::hash` specialization in the same header.
 
 ## Definition of Done
-- [ ] All headers exist with proper guards (`GAMEOFLIFES_ENGINE_*_HPP`).
-- [ ] `Grid<int>` instantiable; round-trips set/at correctly.
-- [ ] Wrap unit tests cover: positive in-bounds, positive overflow, negative, zero size guarded.
-- [ ] Direction unit tests cover all 4 turns + offsets.
-- [ ] No warnings.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] All headers exist with proper guards (`GAMEOFLIFES_ENGINE_*_HPP`).
+- [x] `Grid<int>` instantiable; round-trips set/at correctly.
+- [x] Wrap unit tests cover: positive in-bounds, positive overflow, negative, zero size guarded.
+- [x] Direction unit tests cover all 4 turns + offsets.
+- [x] No warnings.
+- [x] `docs/roadmap/README.md` table updated to `done`.
+
+> Note : divergence ADR 005/006 (monde non toroïdal, chunké) vs roadmap (toroïdal). Voir `docs/roadmap/skipped.md` — option (a) retenue, à reconfirmer avant step 06.
