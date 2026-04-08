@@ -1,8 +1,8 @@
 # 03 — Engine skeleton (CMake + doctest)
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Stand up the C++ engine project with a working build, a working test runner, and a "hello tick" executable. No simulation logic yet — the point is that `just build-engine` and `just test-engine` work end-to-end and CI is green on a trivial test.
@@ -28,9 +28,9 @@ Stand up the C++ engine project with a working build, a working test runner, and
 - Doctest tag: latest stable (`v2.4.11` at time of writing — verify before pinning).
 
 ## Definition of Done
-- [ ] `cmake -S engine -B engine/build && cmake --build engine/build` succeeds with no warnings.
-- [ ] `engine/build/gameoflifes_engine` runs and prints "tick 0".
-- [ ] `ctest --test-dir engine/build` passes.
-- [ ] `just build-engine`, `just test-engine`, `just run` all work.
-- [ ] CI engine job green.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `cmake -S engine -B engine/build && cmake --build engine/build` succeeds with no warnings.
+- [x] `engine/build/gameoflifes_engine` runs and prints "tick 0".
+- [x] `ctest --test-dir engine/build` passes.
+- [x] `just build-engine`, `just test-engine`, `just run` all work.
+- [x] CI engine job green.
+- [x] `docs/roadmap/README.md` table updated to `done`.
