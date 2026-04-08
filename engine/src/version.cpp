@@ -2,9 +2,8 @@
 
 namespace gol {
 
-std::string_view version() noexcept
-{
+std::string_view version() noexcept {
     return "0.1.0";
 }
 
-}  // namespace gol
+} // namespace gol
