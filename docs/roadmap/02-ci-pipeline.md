@@ -1,8 +1,8 @@
 # 02 — CI pipeline
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Wire GitHub Actions so every push and PR runs format checks, lints, builds, and tests across all bricks. After this step, a red CI blocks merges and the contract "never push when local tests are red" is enforceable.
@@ -29,8 +29,8 @@ Wire GitHub Actions so every push and PR runs format checks, lints, builds, and 
 - Each brick job is independent — failure in one doesn't cancel the others (`fail-fast: false`).
 
 ## Definition of Done
-- [ ] `.github/workflows/ci.yml` exists and runs on `push` + `pull_request`.
-- [ ] All jobs green on a no-op PR.
-- [ ] A deliberately broken format / lint / test fails the right job (verified once).
-- [ ] CI badge in root README.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `.github/workflows/ci.yml` exists and runs on `push` + `pull_request`.
+- [x] All jobs green on a no-op PR.
+- [x] A deliberately broken format / lint / test fails the right job (verified once).
+- [x] CI badge in root README.
+- [x] `docs/roadmap/README.md` table updated to `done`.

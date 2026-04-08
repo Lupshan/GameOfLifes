@@ -9,7 +9,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 | #  | Step                              | File                                                          | Status      |
 |----|-----------------------------------|---------------------------------------------------------------|-------------|
 | 01 | Repo bootstrap                    | [01-repo-bootstrap.md](01-repo-bootstrap.md)                  | done        |
-| 02 | CI pipeline                       | [02-ci-pipeline.md](02-ci-pipeline.md)                        | not started |
+| 02 | CI pipeline                       | [02-ci-pipeline.md](02-ci-pipeline.md)                        | done        |
 
 ## Phase 1 — Engine core (C++)
 
