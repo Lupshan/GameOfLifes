@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  engine:
+    name: Engine (C++)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang clang-format cmake ninja-build
+
+      - name: Format check (clang-format)
+        run: |
+          if [ -d engine ] && find engine -name '*.cpp' -o -name '*.hpp' | grep -q .; then
+            find engine \( -name '*.cpp' -o -name '*.hpp' \) -print0 \
+              | xargs -0 clang-format --dry-run --Werror
+          else
+            echo "No C++ sources yet — skipping format check."
+          fi
+
+      - name: Configure
+        run: |
+          if [ -f engine/CMakeLists.txt ]; then
+            cmake -S engine -B engine/build -G Ninja \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_CXX_COMPILER=clang++
+          else
+            echo "engine/CMakeLists.txt not present yet — skipping."
+          fi
+
+      - name: Build
+        run: |
+          if [ -d engine/build ]; then
+            cmake --build engine/build
+          fi
+
+      - name: Test
+        run: |
+          if [ -d engine/build ]; then
+            ctest --test-dir engine/build --output-on-failure
+          fi
+
+  python:
+    name: Python (bytecode + backend)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Format check (ruff)
+        run: |
+          if find bytecode backend -name '*.py' 2>/dev/null | grep -q .; then
+            uvx ruff format --check bytecode backend
+            uvx ruff check bytecode backend
+          else
+            echo "No Python sources yet — skipping ruff."
+          fi
+
+      - name: Test bytecode compiler
+        run: |
+          if [ -f bytecode/pyproject.toml ]; then
+            cd bytecode && uv sync && uv run pytest
+          fi
+
+      - name: Test backend
+        run: |
+          if [ -f backend/pyproject.toml ]; then
+            cd backend && uv sync && uv run pytest
+          fi

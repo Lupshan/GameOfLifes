@@ -1,0 +1,107 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "for f in $CLAUDE_FILE_PATHS; do case \"$f\" in *.cpp|*.hpp|*.h|*.cc) command -v clang-format >/dev/null && clang-format -i \"$f\" ;; *.py) command -v ruff >/dev/null && ruff format \"$f\" >/dev/null 2>&1 ;; esac; done; exit 0"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(just:*)",
+      "Bash(cmake:*)",
+      "Bash(ctest:*)",
+      "Bash(ninja:*)",
+      "Bash(make:*)",
+      "Bash(clang-format:*)",
+      "Bash(clang-tidy:*)",
+      "Bash(g++:*)",
+      "Bash(clang++:*)",
+
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(uv:*)",
+      "Bash(uvx:*)",
+      "Bash(poetry:*)",
+      "Bash(poetry run:*)",
+      "Bash(poetry install:*)",
+      "Bash(poetry add:*)",
+      "Bash(pip install:*)",
+      "Bash(pytest:*)",
+      "Bash(ruff:*)",
+      "Bash(pyright:*)",
+
+      "Bash(npm run:*)",
+      "Bash(npm test:*)",
+      "Bash(npm install:*)",
+      "Bash(npx vite:*)",
+      "Bash(npx svelte-kit:*)",
+      "Bash(pnpm:*)",
+
+      "Bash(git:*)",
+
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(file:*)",
+
+      "Bash(docker:*)",
+      "Bash(docker-compose:*)"
+    ],
+    "ask": [
+      "WebFetch",
+      "WebSearch"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(sudo:*)",
+      "Bash(chmod 777:*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+
+      "Read(.env*)",
+      "Read(.envs/**)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/.env.keys)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/id_rsa*)",
+      "Read(**/id_ed25519*)",
+      "Read(**/secrets/**)",
+      "Read(**/credentials/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+
+      "Bash(ssh *)",
+      "Bash(ssh-keygen*)",
+      "Bash(ssh-add*)",
+      "Bash(scp *)",
+      "Bash(cat ~/.ssh*)",
+      "Bash(ls ~/.ssh*)",
+      "Bash(gpg:*)",
+
+      "Bash(just clean*)",
+      "Bash(git push --force-with-lease*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git checkout -- *)",
+      "Bash(git restore --staged --worktree*)",
+      "Bash(git branch -D*)"
+    ],
+    "additionalDirectories": []
+  },
+  "env": {
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1"
+  }
+}
