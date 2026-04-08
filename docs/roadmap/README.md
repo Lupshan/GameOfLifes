@@ -15,7 +15,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 
 | #  | Step                              | File                                                          | Status      |
 |----|-----------------------------------|---------------------------------------------------------------|-------------|
-| 03 | Engine skeleton (CMake + doctest) | [03-engine-skeleton.md](03-engine-skeleton.md)                | not started |
+| 03 | Engine skeleton (CMake + doctest) | [03-engine-skeleton.md](03-engine-skeleton.md)                | done        |
 | 04 | World grid + primitives           | [04-world-grid.md](04-world-grid.md)                          | not started |
 | 05 | RNG + config                      | [05-rng-config.md](05-rng-config.md)                          | not started |
 | 06 | Agents + tick loop                | [06-agents-tick-loop.md](06-agents-tick-loop.md)              | not started |
