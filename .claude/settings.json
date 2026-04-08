@@ -56,7 +56,29 @@
       "Bash(file:*)",
 
       "Bash(docker:*)",
-      "Bash(docker-compose:*)"
+      "Bash(docker-compose:*)",
+
+      "Bash(cd:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(mv:*)",
+      "Bash(cp:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(echo:*)",
+      "Bash(sleep:*)",
+      "Bash(test:*)",
+      "Bash(true)",
+      "Bash(false)",
+      "Bash(env:*)",
+      "Bash(which:*)",
+      "Bash(node:*)",
+      "Bash(npx:*)",
+      "Bash(rm:*)",
+      "Bash(rtk:*)"
     ],
     "ask": [
       "WebFetch",
