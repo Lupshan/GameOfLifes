@@ -4,6 +4,8 @@ add_executable(engine_tests
     test_position.cpp
     test_direction.cpp
     test_grid.cpp
+    test_rng.cpp
+    test_world_config.cpp
 )
 target_link_libraries(engine_tests PRIVATE engine_core doctest::doctest)
 

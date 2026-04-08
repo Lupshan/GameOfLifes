@@ -1,8 +1,8 @@
 # 05 — RNG + config
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Make the simulation deterministic and configurable. Every random draw must come from a single seeded RNG owned by the simulation, and every tweakable parameter must live in a `WorldConfig` struct loaded from a config file.
@@ -24,8 +24,8 @@ Make the simulation deterministic and configurable. Every random draw must come 
 - `tomlplusplus` fetched via FetchContent, pinned.
 
 ## Definition of Done
-- [ ] `Rng` wrapper exists with the listed helpers + tests.
-- [ ] `WorldConfig` + loader works on `engine/config/default.toml`.
-- [ ] Same seed → identical sequence verified by test.
-- [ ] `tomlplusplus` pinned in CMake.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `Rng` wrapper exists with the listed helpers + tests.
+- [x] `WorldConfig` + loader works on `engine/config/default.toml`.
+- [x] Same seed → identical sequence verified by test.
+- [x] `tomlplusplus` pinned in CMake.
+- [x] `docs/roadmap/README.md` table updated to `done`.
