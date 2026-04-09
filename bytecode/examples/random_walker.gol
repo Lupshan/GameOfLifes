@@ -1,0 +1,7 @@
+// Random walker — turns right and moves every tick, eating and drinking.
+fn main() {
+    turn_right();
+    move();
+    eat();
+    drink();
+}

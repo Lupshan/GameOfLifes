@@ -1,0 +1,16 @@
+// Food seeker — looks ahead for food, moves toward it, reproduces when wealthy.
+fn main() {
+    let food = look_food();
+    if (food > 0) {
+        move();
+        eat();
+    } else {
+        turn_right();
+    }
+
+    drink();
+
+    if (my_energy() > 100) {
+        reproduce();
+    }
+}

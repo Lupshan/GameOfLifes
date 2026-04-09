@@ -38,6 +38,7 @@ dist/
 .DS_Store
 
 # Project
+*.gob
 *.snapshot
 /data/
 /logs/

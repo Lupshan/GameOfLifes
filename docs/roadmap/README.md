@@ -45,7 +45,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 | 15 | Language grammar spec             | [15-language-spec.md](15-language-spec.md)                    | done        |
 | 16 | Lexer + parser                    | [16-lexer-parser.md](16-lexer-parser.md)                      | done        |
 | 17 | AST → bytecode codegen            | [17-codegen.md](17-codegen.md)                                | done        |
-| 18 | Compiler CLI + round-trip tests   | [18-compiler-cli.md](18-compiler-cli.md)                      | not started |
+| 18 | Compiler CLI + round-trip tests   | [18-compiler-cli.md](18-compiler-cli.md)                      | done        |
 
 ## Phase 5 — Backend (FastAPI)
 

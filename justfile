@@ -45,6 +45,12 @@ test: test-engine test-bytecode test-backend
 run: build-engine
     ./engine/build/gameoflifes_engine
 
+# --- compile ---
+
+# Compile a GoL Script source file to bytecode
+compile file:
+    cd bytecode && uv run python -m compiler ../{{file}}
+
 # --- format & lint ---
 
 # Format all code
