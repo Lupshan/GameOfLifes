@@ -2,9 +2,8 @@
 #include "engine/snapshot_json.hpp"
 #include "engine/world.hpp"
 
-#include <doctest/doctest.h>
-
 #include <cstdint>
+#include <doctest/doctest.h>
 
 static gol::WorldConfig tiny_config() {
     gol::WorldConfig cfg;
@@ -27,7 +26,7 @@ TEST_CASE("snapshot round-trip empty world") {
     std::string json = gol::snapshot_to_json(snap);
     gol::Snapshot restored = gol::snapshot_from_json(json);
 
-    CHECK(restored.version == 1);
+    CHECK(restored.version == 2);
     CHECK(restored.tick == 0);
     CHECK(restored.width == 8);
     CHECK(restored.height == 8);
@@ -86,7 +85,7 @@ TEST_CASE("snapshot JSON contains version field") {
     std::string json = gol::snapshot_to_json(snap);
 
     // Crude check: the string must contain "version": 1
-    CHECK(json.find("\"version\": 1") != std::string::npos);
+    CHECK(json.find("\"version\": 2") != std::string::npos);
 }
 
 // ---- round-trip: all food cells set ----

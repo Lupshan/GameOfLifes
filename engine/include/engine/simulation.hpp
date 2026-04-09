@@ -21,7 +21,7 @@ class Simulation {
 
 void step_agent(Agent& agent, World& world);
 void reproduce_agents(World& world, LineageLog* log);
-void respawn_food(World& world);
+void respawn_resources(World& world);
 void reap_dead(World& world, LineageLog* log);
 
 } // namespace gol

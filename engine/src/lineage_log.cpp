@@ -1,8 +1,7 @@
 #include "engine/lineage_log.hpp"
 
-#include <nlohmann/json.hpp>
-
 #include <iomanip>
+#include <nlohmann/json.hpp>
 #include <sstream>
 
 namespace gol {
@@ -32,8 +31,11 @@ bool LineageLog::enabled() const noexcept {
     return enabled_;
 }
 
-void LineageLog::log_birth(std::uint64_t tick, std::uint64_t id, std::uint64_t parent_id,
-                           std::uint64_t generation, const Genome& genome) {
+void LineageLog::log_birth(std::uint64_t tick,
+                           std::uint64_t id,
+                           std::uint64_t parent_id,
+                           std::uint64_t generation,
+                           const Genome& genome) {
     if (!enabled_) {
         return;
     }

@@ -4,6 +4,7 @@
 #include "engine/agent.hpp"
 #include "engine/grid.hpp"
 #include "engine/rng.hpp"
+#include "engine/terrain.hpp"
 #include "engine/world_config.hpp"
 
 #include <cstdint>
@@ -21,14 +22,26 @@ class World {
 
     std::uint64_t spawn_agent(Position pos, int energy);
     std::uint64_t spawn_agent(Position pos, int energy, const Genome& genome);
-    std::uint64_t spawn_child(Position pos, int energy, const Genome& genome,
-                              std::uint64_t parent_id, std::uint64_t generation);
+    std::uint64_t spawn_child(Position pos,
+                              int energy,
+                              const Genome& genome,
+                              std::uint64_t parent_id,
+                              std::uint64_t generation);
 
     const std::vector<Agent>& agents() const noexcept;
     std::vector<Agent>& agents() noexcept;
 
     Grid<std::uint8_t>& food() noexcept;
     const Grid<std::uint8_t>& food() const noexcept;
+
+    Grid<std::uint8_t>& water() noexcept;
+    const Grid<std::uint8_t>& water() const noexcept;
+
+    Grid<std::uint8_t>& mineral() noexcept;
+    const Grid<std::uint8_t>& mineral() const noexcept;
+
+    Grid<Terrain>& terrain() noexcept;
+    const Grid<Terrain>& terrain() const noexcept;
 
     const WorldConfig& config() const noexcept;
     std::uint64_t tick_count() const noexcept;
@@ -38,7 +51,10 @@ class World {
 
   private:
     WorldConfig config_;
+    Grid<Terrain> terrain_;
     Grid<std::uint8_t> food_;
+    Grid<std::uint8_t> water_;
+    Grid<std::uint8_t> mineral_;
     std::vector<Agent> agents_;
     Rng rng_;
     std::uint64_t tick_count_;

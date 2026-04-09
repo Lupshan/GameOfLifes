@@ -1,11 +1,10 @@
 #include "engine/snapshot_json.hpp"
 
-#include <nlohmann/json.hpp>
-
 #include <array>
 #include <cstddef>
 #include <cstdint>
 #include <iomanip>
+#include <nlohmann/json.hpp>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -20,11 +19,10 @@ namespace gol {
 namespace {
 
 const std::array<char, 64> BASE64_CHARS = {
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+    'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+    'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
 
 int base64_index(char c) {
     if (c >= 'A' && c <= 'Z') {
@@ -98,8 +96,8 @@ std::vector<std::uint8_t> base64_decode(const std::string& encoded) {
             throw std::runtime_error("snapshot_from_json: invalid base64 character");
         }
 
-        std::uint32_t triple = (static_cast<std::uint32_t>(a) << 18) |
-                               (static_cast<std::uint32_t>(b) << 12);
+        std::uint32_t triple =
+            (static_cast<std::uint32_t>(a) << 18) | (static_cast<std::uint32_t>(b) << 12);
         out.push_back(static_cast<std::uint8_t>((triple >> 16) & 0xFF));
 
         if (c >= 0) {
@@ -173,19 +171,31 @@ Snapshot capture_snapshot(const World& world) {
     snap.seed = world.config().seed;
 
     for (const auto& agent : world.agents()) {
-        snap.agents.push_back(SnapshotAgent{agent.id, agent.pos, agent.energy, agent.alive,
-                                            agent.genome, agent.parent_id, agent.generation});
+        snap.agents.push_back(SnapshotAgent{agent.id,
+                                            agent.pos,
+                                            agent.energy,
+                                            agent.hydration,
+                                            agent.alive,
+                                            agent.genome,
+                                            agent.parent_id,
+                                            agent.generation});
     }
 
-    const auto& food_grid = world.food();
-    std::size_t total = static_cast<std::size_t>(snap.width) * static_cast<std::size_t>(snap.height);
+    std::size_t total =
+        static_cast<std::size_t>(snap.width) * static_cast<std::size_t>(snap.height);
     snap.food.resize(total);
+    snap.water.resize(total);
+    snap.mineral.resize(total);
+    snap.terrain.resize(total);
     for (int y = 0; y < snap.height; ++y) {
         for (int x = 0; x < snap.width; ++x) {
-            std::size_t idx =
-                static_cast<std::size_t>(y) * static_cast<std::size_t>(snap.width) +
-                static_cast<std::size_t>(x);
-            snap.food[idx] = food_grid.at(Position{x, y});
+            std::size_t idx = static_cast<std::size_t>(y) * static_cast<std::size_t>(snap.width) +
+                              static_cast<std::size_t>(x);
+            Position p{x, y};
+            snap.food[idx] = world.food().at(p);
+            snap.water[idx] = world.water().at(p);
+            snap.mineral[idx] = world.mineral().at(p);
+            snap.terrain[idx] = static_cast<std::uint8_t>(world.terrain().at(p));
         }
     }
 
@@ -211,6 +221,7 @@ std::string snapshot_to_json(const Snapshot& snap) {
         aj["x"] = a.pos.x;
         aj["y"] = a.pos.y;
         aj["energy"] = a.energy;
+        aj["hydration"] = a.hydration;
         aj["alive"] = a.alive;
         aj["genome"] = genome_to_hex(a.genome);
         aj["parent_id"] = a.parent_id;
@@ -219,9 +230,13 @@ std::string snapshot_to_json(const Snapshot& snap) {
     }
     j["agents"] = agents_arr;
 
-    // Food: pack bits then base64 encode.
-    std::vector<std::uint8_t> packed = pack_bits(snap.food);
-    j["food"] = base64_encode(packed);
+    // Resource grids: pack bits then base64 encode.
+    j["food"] = base64_encode(pack_bits(snap.food));
+    j["water"] = base64_encode(pack_bits(snap.water));
+    j["mineral"] = base64_encode(pack_bits(snap.mineral));
+
+    // Terrain: raw bytes (not bit-packed, values 0-3), base64 encoded.
+    j["terrain"] = base64_encode(snap.terrain);
 
     return j.dump(2);
 }
@@ -242,6 +257,9 @@ Snapshot snapshot_from_json(const std::string& json_str) {
         a.pos.x = aj.at("x").get<int>();
         a.pos.y = aj.at("y").get<int>();
         a.energy = aj.at("energy").get<int>();
+        if (aj.contains("hydration")) {
+            a.hydration = aj.at("hydration").get<int>();
+        }
         a.alive = aj.at("alive").get<bool>();
         if (aj.contains("genome")) {
             a.genome = hex_to_genome(aj.at("genome").get<std::string>());
@@ -255,10 +273,20 @@ Snapshot snapshot_from_json(const std::string& json_str) {
         snap.agents.push_back(a);
     }
 
-    std::string food_b64 = j.at("food").get<std::string>();
-    std::vector<std::uint8_t> packed = base64_decode(food_b64);
-    std::size_t total = static_cast<std::size_t>(snap.width) * static_cast<std::size_t>(snap.height);
-    snap.food = unpack_bits(packed, total);
+    std::size_t total =
+        static_cast<std::size_t>(snap.width) * static_cast<std::size_t>(snap.height);
+    snap.food = unpack_bits(base64_decode(j.at("food").get<std::string>()), total);
+
+    if (j.contains("water")) {
+        snap.water = unpack_bits(base64_decode(j.at("water").get<std::string>()), total);
+    }
+    if (j.contains("mineral")) {
+        snap.mineral = unpack_bits(base64_decode(j.at("mineral").get<std::string>()), total);
+    }
+    if (j.contains("terrain")) {
+        snap.terrain = base64_decode(j.at("terrain").get<std::string>());
+        snap.terrain.resize(total); // ensure correct size
+    }
 
     return snap;
 }

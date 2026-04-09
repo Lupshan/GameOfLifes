@@ -1,10 +1,9 @@
 #include "engine/genome.hpp"
 #include "engine/traits.hpp"
 
-#include <doctest/doctest.h>
-
 #include <cmath>
 #include <cstdint>
+#include <doctest/doctest.h>
 
 // ---- decode is deterministic ----
 

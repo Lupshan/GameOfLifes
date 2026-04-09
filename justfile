@@ -49,7 +49,7 @@ run: build-engine
 
 # Format all code
 fmt:
-    @cpp_files=$(find engine -type f \( -name '*.cpp' -o -name '*.hpp' \) 2>/dev/null) ; \
+    @cpp_files=$(find engine/include engine/src engine/tests -type f \( -name '*.cpp' -o -name '*.hpp' \) 2>/dev/null) ; \
     if [ -n "$cpp_files" ]; then echo "$cpp_files" | xargs clang-format -i ; \
     else echo "No C++ sources to format yet." ; fi
     cd bytecode && uv run ruff format .

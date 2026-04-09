@@ -71,8 +71,8 @@ int main(int argc, char* argv[]) {
     }
 
     gol::LineageLog lineage_log(lineage_path);
-    gol::Simulation sim = lineage_log.enabled() ? gol::Simulation(world, lineage_log)
-                                                : gol::Simulation(world);
+    gol::Simulation sim =
+        lineage_log.enabled() ? gol::Simulation(world, lineage_log) : gol::Simulation(world);
     for (int t = 0; t < n_ticks; ++t) {
         sim.tick();
         if (!snapshot_dir.empty()) {

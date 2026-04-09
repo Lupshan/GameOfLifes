@@ -15,6 +15,8 @@ Traits decode(const Genome& genome) {
     t.metabolism = map_byte(genome[GENE_METABOLISM], METABOLISM_MIN, METABOLISM_MAX);
     t.reproduction_threshold =
         map_byte(genome[GENE_REPRO_THRESHOLD], REPRO_THRESHOLD_MIN, REPRO_THRESHOLD_MAX);
+    t.swim = map_byte(genome[GENE_SWIM], SWIM_MIN, SWIM_MAX);
+    t.forage_efficiency = map_byte(genome[GENE_FORAGE], FORAGE_MIN, FORAGE_MAX);
     return t;
 }
 

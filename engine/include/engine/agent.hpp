@@ -13,6 +13,7 @@ static constexpr std::uint64_t NO_PARENT = UINT64_MAX;
 struct Agent {
     Position pos;
     int energy;
+    int hydration;
     bool alive;
     std::uint64_t id;
     Genome genome;

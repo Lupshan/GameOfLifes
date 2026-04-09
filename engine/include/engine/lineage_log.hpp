@@ -17,8 +17,11 @@ class LineageLog {
 
     bool enabled() const noexcept;
 
-    void log_birth(std::uint64_t tick, std::uint64_t id, std::uint64_t parent_id,
-                   std::uint64_t generation, const Genome& genome);
+    void log_birth(std::uint64_t tick,
+                   std::uint64_t id,
+                   std::uint64_t parent_id,
+                   std::uint64_t generation,
+                   const Genome& genome);
 
     void log_death(std::uint64_t tick, std::uint64_t id, const std::string& cause);
 

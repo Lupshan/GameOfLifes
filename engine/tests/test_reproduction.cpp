@@ -2,10 +2,9 @@
 #include "engine/simulation.hpp"
 #include "engine/traits.hpp"
 
-#include <doctest/doctest.h>
-
 #include <algorithm>
 #include <cstdint>
+#include <doctest/doctest.h>
 #include <numeric>
 
 static gol::WorldConfig repro_config() {
@@ -30,7 +29,7 @@ TEST_CASE("reproduce_agents spawns child when energy >= threshold") {
     // Create a genome with low reproduction threshold.
     gol::Genome g{};
     g[gol::GENE_REPRO_THRESHOLD] = 0; // threshold = REPRO_THRESHOLD_MIN = 50
-    g[gol::GENE_METABOLISM] = 0;       // metabolism = 1
+    g[gol::GENE_METABOLISM] = 0;      // metabolism = 1
     g[gol::GENE_SPEED] = 0;           // speed = 1
 
     world.spawn_agent(gol::Position{8, 8}, 60, g);
@@ -98,7 +97,7 @@ TEST_CASE("multi-generation run shows generation increase") {
     cfg.initial_agents = 10;
     cfg.initial_food = 500;
     cfg.starting_energy = 200;
-    cfg.food_spawn_rate = 0.3;  // generous food for reproduction
+    cfg.food_spawn_rate = 0.3; // generous food for reproduction
     cfg.mutation_rate = 0.01;
     gol::World world(cfg);
     world.init();

@@ -28,7 +28,7 @@ TEST_CASE("step_agent consumes food and gains energy") {
     // Use a genome with speed=1, metabolism=1 for predictable behavior.
     gol::Genome g{};
     g[gol::GENE_SPEED] = 0;      // speed = 1
-    g[gol::GENE_METABOLISM] = 0;  // metabolism = 1
+    g[gol::GENE_METABOLISM] = 0; // metabolism = 1
 
     // place agent at center, fill all neighbours with food
     world.spawn_agent(gol::Position{4, 4}, 10, g);
@@ -56,7 +56,7 @@ TEST_CASE("step_agent drains energy and kills at zero") {
 
     gol::Genome g{};
     g[gol::GENE_SPEED] = 0;      // speed = 1
-    g[gol::GENE_METABOLISM] = 0;  // metabolism = 1
+    g[gol::GENE_METABOLISM] = 0; // metabolism = 1
     world.spawn_agent(gol::Position{0, 0}, 1, g);
 
     gol::Agent& agent = world.agents()[0];
