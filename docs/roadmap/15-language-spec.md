@@ -1,8 +1,8 @@
 # 15 — Language grammar spec
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Design the user-facing scripting language before writing the compiler. Like step 12 for bytecode, this is a contract document. The language should be minimal, learnable in 10 minutes, and compile cleanly down to the existing opcode set.
@@ -26,7 +26,7 @@ Design the user-facing scripting language before writing the compiler. Like step
 - ADR `009-language-v1.md` records design decisions.
 
 ## Definition of Done
-- [ ] `language.md` complete with grammar + samples.
-- [ ] Each sample is provably compilable (mental trace) to existing opcodes.
-- [ ] ADR 009 written.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `language.md` complete with EBNF grammar + 4 sample programs.
+- [x] Each sample is compilable to existing opcodes (compilation mapping table provided).
+- [x] ADR 011 written (009 was taken by multi-resource).
+- [x] `docs/roadmap/README.md` table updated to `done`.
