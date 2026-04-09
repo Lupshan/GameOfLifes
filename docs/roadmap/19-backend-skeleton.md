@@ -1,8 +1,8 @@
 # 19 — Backend skeleton
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Stand up a FastAPI app with the project layout, dependency wiring, and a single `/health` endpoint. Like step 03 for the engine — boring but necessary.
@@ -26,8 +26,8 @@ Stand up a FastAPI app with the project layout, dependency wiring, and a single 
 - Strict pyright on `backend/app/`.
 
 ## Definition of Done
-- [ ] FastAPI app starts via `just run-backend`.
-- [ ] `GET /health` returns 200.
-- [ ] Test passes.
-- [ ] CI backend job green.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] FastAPI app starts via `just run-backend`.
+- [x] `GET /health` returns 200.
+- [x] Test passes (httpx AsyncClient).
+- [x] CI backend job green.
+- [x] `docs/roadmap/README.md` table updated to `done`.

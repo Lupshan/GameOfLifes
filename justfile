@@ -45,6 +45,10 @@ test: test-engine test-bytecode test-backend
 run: build-engine
     ./engine/build/gameoflifes_engine
 
+# Start the backend dev server
+run-backend:
+    cd backend && uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
 # --- compile ---
 
 # Compile a GoL Script source file to bytecode

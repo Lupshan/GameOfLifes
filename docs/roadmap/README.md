@@ -51,7 +51,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 
 | #  | Step                              | File                                                          | Status      |
 |----|-----------------------------------|---------------------------------------------------------------|-------------|
-| 19 | Backend skeleton                  | [19-backend-skeleton.md](19-backend-skeleton.md)              | not started |
+| 19 | Backend skeleton                  | [19-backend-skeleton.md](19-backend-skeleton.md)              | done        |
 | 20 | DB schema + migrations            | [20-db-schema.md](20-db-schema.md)                            | not started |
 | 21 | User auth                         | [21-user-auth.md](21-user-auth.md)                            | not started |
 | 22 | Bot submission API                | [22-bot-submission-api.md](22-bot-submission-api.md)          | not started |
