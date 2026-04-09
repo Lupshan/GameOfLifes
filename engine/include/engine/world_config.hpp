@@ -16,8 +16,9 @@ struct WorldConfig {
     double food_spawn_rate = 0.05;
     int starting_energy = 100;
     double mutation_rate = 0.01;
-    int day_length = 100;   // ticks per day (0 = no day/night cycle)
-    int year_length = 1200; // ticks per year (0 = no seasons)
+    int day_length = 100;          // ticks per day (0 = no day/night cycle)
+    int year_length = 1200;        // ticks per year (0 = no seasons)
+    int instruction_budget = 1000; // VM instructions per agent per tick
 };
 
 WorldConfig load_world_config(const std::filesystem::path& path);

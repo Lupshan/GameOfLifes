@@ -1,6 +1,7 @@
 #ifndef GAMEOFLIFES_ENGINE_AGENT_HPP
 #define GAMEOFLIFES_ENGINE_AGENT_HPP
 
+#include "engine/direction.hpp"
 #include "engine/genome.hpp"
 #include "engine/position.hpp"
 
@@ -19,6 +20,7 @@ struct Agent {
     Genome genome;
     std::uint64_t parent_id = NO_PARENT;
     std::uint64_t generation = 0;
+    Direction facing = Direction::North;
 };
 
 } // namespace gol

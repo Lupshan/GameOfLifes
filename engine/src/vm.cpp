@@ -20,6 +20,18 @@ void Vm::load(const Bytecode& bc) {
     locals_.fill(0);
 }
 
+void Vm::set_intrinsic_handler(IntrinsicHandler* handler) {
+    intrinsic_handler_ = handler;
+}
+
+bool Vm::can_push() const {
+    return sp_ < VM_MAX_STACK;
+}
+
+bool Vm::can_pop() const {
+    return sp_ > 0;
+}
+
 void Vm::reset_for_tick() {
     pc_ = 0;
     sp_ = 0;
@@ -379,19 +391,67 @@ VmStatus Vm::step() {
         return VmStatus::Ok;
     }
 
-    // Agent intrinsics — unimplemented until step 14.
+    // Agent intrinsics — dispatched through handler.
     case op::PERCEIVE:
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        return intrinsic_handler_->handle_perceive(*this);
     case op::LOOK:
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        return intrinsic_handler_->handle_look(*this);
     case op::MOVE:
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        return intrinsic_handler_->handle_move(*this);
     case op::TURN_LEFT:
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        return intrinsic_handler_->handle_turn_left(*this);
     case op::TURN_RIGHT:
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        return intrinsic_handler_->handle_turn_right(*this);
     case op::EAT:
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        return intrinsic_handler_->handle_eat(*this);
     case op::DRINK:
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        return intrinsic_handler_->handle_drink(*this);
     case op::REPRODUCE:
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        return intrinsic_handler_->handle_reproduce(*this);
     case op::MY_ENERGY:
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        return intrinsic_handler_->handle_my_energy(*this);
     case op::MY_HYDRATION:
-    case op::MY_TRAIT:
-        return VmStatus::UnimplementedIntrinsic;
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        return intrinsic_handler_->handle_my_hydration(*this);
+    case op::MY_TRAIT: {
+        if (intrinsic_handler_ == nullptr) {
+            return VmStatus::UnimplementedIntrinsic;
+        }
+        if (pc_ >= bc_->code.size()) {
+            return VmStatus::InvalidOpcode;
+        }
+        std::uint8_t trait_id = read_u8();
+        return intrinsic_handler_->handle_my_trait(*this, trait_id);
+    }
 
     default:
         return VmStatus::InvalidOpcode;
@@ -399,8 +459,20 @@ VmStatus Vm::step() {
 }
 
 VmStatus Vm::run(int budget) {
-    for (int i = 0; i < budget; ++i) {
+    int remaining = budget;
+    while (remaining > 0) {
+        // Peek at the next opcode to determine cost before executing.
+        std::uint8_t next_op = (bc_ != nullptr && pc_ < bc_->code.size()) ? bc_->code[pc_] : 0;
+        bool is_intrinsic = (next_op >= 0x80 && next_op <= 0x8F);
+        int cost = is_intrinsic ? INTRINSIC_COST : 1;
+
+        if (remaining < cost) {
+            return VmStatus::BudgetExhausted;
+        }
+
         VmStatus status = step();
+        remaining -= cost;
+
         if (status != VmStatus::Ok) {
             return status;
         }

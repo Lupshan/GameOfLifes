@@ -39,6 +39,7 @@ WorldConfig load_world_config(const std::filesystem::path& path) {
     cfg.mutation_rate = get_or<double>(tbl, "mutation_rate", cfg.mutation_rate);
     cfg.day_length = get_or<int64_t>(tbl, "day_length", cfg.day_length);
     cfg.year_length = get_or<int64_t>(tbl, "year_length", cfg.year_length);
+    cfg.instruction_budget = get_or<int64_t>(tbl, "instruction_budget", cfg.instruction_budget);
     return cfg;
 }
 

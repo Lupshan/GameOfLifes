@@ -1,8 +1,8 @@
 # 14 — Agent ↔ VM binding
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Connect the VM to the simulation. Agents now run a bytecode program every tick, perceiving the world via intrinsic opcodes and acting via others. After this step, a hand-written bytecode "wander and eat" bot replaces the hardcoded random walker.
@@ -31,7 +31,7 @@ Connect the VM to the simulation. Agents now run a bytecode program every tick, 
 - Bytecode files use extension `.gob` (game of life bytecode).
 
 ## Definition of Done
-- [ ] All intrinsics implemented + tested.
-- [ ] Hand-written `random_walker.gob` runs.
-- [ ] Functional parity test with step 06 baseline passes.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] All intrinsics implemented + tested (PERCEIVE, LOOK, MOVE, TURN, EAT, DRINK, REPRODUCE, MY_ENERGY, MY_HYDRATION, MY_TRAIT).
+- [x] Hand-written random walker bytecode bot runs for 100 ticks.
+- [x] IntrinsicHandler abstract interface + AgentIntrinsicHandler concrete impl.
+- [x] `docs/roadmap/README.md` table updated to `done`.

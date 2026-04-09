@@ -14,6 +14,7 @@ add_executable(engine_tests
     test_ecosystem.cpp
     test_world_clock.cpp
     test_vm.cpp
+    test_agent_vm.cpp
 )
 target_link_libraries(engine_tests PRIVATE engine_core doctest::doctest)
 
