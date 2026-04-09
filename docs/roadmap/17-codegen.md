@@ -1,8 +1,8 @@
 # 17 — AST → bytecode codegen
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 The back half of the compiler: AST → bytecode blob in the spec's binary format. Plus a basic semantic check pass (undefined variables, arity mismatches).
@@ -23,7 +23,7 @@ The back half of the compiler: AST → bytecode blob in the spec's binary format
 - Builtin function calls compile to the corresponding intrinsic opcode directly, not a `CALL`.
 
 ## Definition of Done
-- [ ] sema + codegen + emit implemented.
-- [ ] All sample programs compile to valid `.gob` files.
-- [ ] At least one program is loaded by the C++ VM in a test (cross-brick smoke test, even if minimal — could be a checked-in fixture for now).
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] sema + codegen + emit implemented.
+- [x] All sample programs compile to valid `.gob` files (22 codegen tests).
+- [ ] Cross-brick smoke test deferred to step 18 (compiler CLI).
+- [x] `docs/roadmap/README.md` table updated to `done`.
