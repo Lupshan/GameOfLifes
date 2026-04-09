@@ -35,6 +35,8 @@ add_library(engine_core STATIC
     src/rng.cpp
     src/world_config_loader.cpp
     src/world.cpp
+    src/simulation.cpp
+    src/stats.cpp
 )
 target_include_directories(engine_core PUBLIC include)
 target_link_libraries(engine_core PUBLIC tomlplusplus::tomlplusplus)
