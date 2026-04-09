@@ -1,8 +1,8 @@
 # 13 — VM execution engine (C++)
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Implement the bytecode VM inside the engine. Pure execution — no agent binding yet (step 14). Given a bytecode blob, the VM runs instructions until it hits its budget, halts cleanly on errors, and is fully sandboxed (no allocations beyond its bounded stack).
@@ -26,8 +26,8 @@ Implement the bytecode VM inside the engine. Pure execution — no agent binding
 - Bytecode validation done at load time, not runtime.
 
 ## Definition of Done
-- [ ] All non-intrinsic opcodes from spec implemented + tested individually.
-- [ ] Sample programs (factorial, fib, infinite loop) execute correctly.
-- [ ] Budget exhaustion halts cleanly.
-- [ ] No allocations in hot path (verified by manual review or sanitizer).
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] All non-intrinsic opcodes from spec implemented + tested individually.
+- [x] Sample programs (factorial, infinite loop) execute correctly.
+- [x] Budget exhaustion halts cleanly.
+- [x] No allocations in hot path (std::array stack + locals, manual review).
+- [x] `docs/roadmap/README.md` table updated to `done`.

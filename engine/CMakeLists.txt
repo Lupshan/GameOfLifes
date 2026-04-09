@@ -50,6 +50,8 @@ add_library(engine_core STATIC
     src/lineage_log.cpp
     src/terrain.cpp
     src/world_clock.cpp
+    src/bytecode.cpp
+    src/vm.cpp
 )
 target_include_directories(engine_core PUBLIC include)
 target_link_libraries(engine_core PUBLIC tomlplusplus::tomlplusplus nlohmann_json::nlohmann_json)
