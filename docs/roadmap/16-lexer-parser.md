@@ -1,8 +1,8 @@
 # 16 — Lexer + parser
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Build the front half of the compiler: source code → AST. Pure Python, well-tested, no codegen yet.
@@ -25,8 +25,8 @@ Build the front half of the compiler: source code → AST. Pure Python, well-tes
 - Strict pyright mode for `bytecode/compiler/`.
 
 ## Definition of Done
-- [ ] Lexer + parser implemented.
-- [ ] All sample programs round-trip source → AST.
-- [ ] Error tests cover: unexpected token, EOF, unknown identifier.
-- [ ] `just test-bytecode` green.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Lexer + parser implemented (hand-written recursive descent).
+- [x] All sample programs round-trip source → AST.
+- [x] Error tests cover: unexpected token, EOF, missing semicolon, missing paren.
+- [x] `just test-bytecode` green (37 tests).
+- [x] `docs/roadmap/README.md` table updated to `done`.
