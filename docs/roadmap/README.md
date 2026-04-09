@@ -18,7 +18,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 | 03 | Engine skeleton (CMake + doctest) | [03-engine-skeleton.md](03-engine-skeleton.md)                | done        |
 | 04 | World grid + primitives           | [04-world-grid.md](04-world-grid.md)                          | done        |
 | 05 | RNG + config                      | [05-rng-config.md](05-rng-config.md)                          | done        |
-| 06 | Agents + tick loop                | [06-agents-tick-loop.md](06-agents-tick-loop.md)              | not started |
+| 06 | Agents + tick loop                | [06-agents-tick-loop.md](06-agents-tick-loop.md)              | done        |
 | 07 | World snapshot serialization      | [07-snapshot-serialization.md](07-snapshot-serialization.md)  | not started |
 
 ## Phase 2 — Genetics & ecosystem
