@@ -1,8 +1,8 @@
 # 06 — Agents + tick loop
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 First living simulation. Combine grid + RNG + config into a `World` containing agents that wander, eat food, lose energy, and die. This is the smallest interesting system: it proves the core loop works end-to-end and gives every later step (genetics, VM, snapshots) something concrete to plug into.
@@ -28,10 +28,10 @@ First living simulation. Combine grid + RNG + config into a `World` containing a
 - Functions ≤20 lines; tick loop body extracted into `step_agent`, `respawn_food`, `reap_dead` helpers.
 
 ## Definition of Done
-- [ ] `World`, `Agent`, `Simulation` headers + sources respect CLAUDE.md C++ rules.
-- [ ] `just run` runs N ticks and prints stats.
-- [ ] Unit tests: food, agent move, reap.
-- [ ] Functional test: 100 ticks, invariants hold throughout.
-- [ ] Functional test: starvation bounded.
-- [ ] No warnings, `just test-engine` green.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `World`, `Agent`, `Simulation` headers + sources respect CLAUDE.md C++ rules.
+- [x] `just run` runs N ticks and prints stats.
+- [x] Unit tests: food, agent move, reap.
+- [x] Functional test: 100 ticks, invariants hold throughout.
+- [x] Functional test: starvation bounded.
+- [x] No warnings, `just test-engine` green.
+- [x] `docs/roadmap/README.md` table updated to `done`.
