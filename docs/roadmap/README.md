@@ -34,7 +34,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 
 | #  | Step                              | File                                                          | Status      |
 |----|-----------------------------------|---------------------------------------------------------------|-------------|
-| 12 | Bytecode spec                     | [12-bytecode-spec.md](12-bytecode-spec.md)                    | not started |
+| 12 | Bytecode spec                     | [12-bytecode-spec.md](12-bytecode-spec.md)                    | done        |
 | 13 | VM execution engine (C++)         | [13-vm-engine.md](13-vm-engine.md)                            | not started |
 | 14 | Agent ↔ VM binding                | [14-agent-vm-binding.md](14-agent-vm-binding.md)              | not started |
 

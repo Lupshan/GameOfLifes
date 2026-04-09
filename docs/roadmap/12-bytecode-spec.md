@@ -1,8 +1,8 @@
 # 12 — Bytecode spec
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Define the in-house bytecode format before writing either the VM or the compiler. This is a contract document — both sides depend on it. Locking it down up front avoids the "compiler emits one thing, VM expects another" trap.
@@ -29,7 +29,7 @@ Define the in-house bytecode format before writing either the VM or the compiler
 - ADR `008-bytecode-v1.md` records the design decision and trade-offs.
 
 ## Definition of Done
-- [ ] `opcodes.md` + `format.md` + `semantics.md` written.
-- [ ] ADR 008 written and merged.
-- [ ] Spec is unambiguous enough that VM and compiler can be implemented independently from it.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `opcodes.md` + `format.md` + `semantics.md` written.
+- [x] ADR 010 written (008 was already taken by genome format).
+- [x] Spec is unambiguous enough that VM and compiler can be implemented independently from it.
+- [x] `docs/roadmap/README.md` table updated to `done`.
