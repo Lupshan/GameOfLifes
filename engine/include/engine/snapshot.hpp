@@ -17,6 +17,8 @@ struct SnapshotAgent {
     int energy;
     bool alive;
     Genome genome;
+    std::uint64_t parent_id;
+    std::uint64_t generation;
 };
 
 struct Snapshot {

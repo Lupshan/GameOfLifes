@@ -31,7 +31,14 @@ std::uint64_t World::spawn_agent(Position pos, int energy) {
 
 std::uint64_t World::spawn_agent(Position pos, int energy, const Genome& genome) {
     std::uint64_t id = next_id_++;
-    agents_.push_back(Agent{pos, energy, true, id, genome});
+    agents_.push_back(Agent{pos, energy, true, id, genome, NO_PARENT, 0});
+    return id;
+}
+
+std::uint64_t World::spawn_child(Position pos, int energy, const Genome& genome,
+                                 std::uint64_t parent_id, std::uint64_t generation) {
+    std::uint64_t id = next_id_++;
+    agents_.push_back(Agent{pos, energy, true, id, genome, parent_id, generation});
     return id;
 }
 

@@ -173,8 +173,8 @@ Snapshot capture_snapshot(const World& world) {
     snap.seed = world.config().seed;
 
     for (const auto& agent : world.agents()) {
-        snap.agents.push_back(
-            SnapshotAgent{agent.id, agent.pos, agent.energy, agent.alive, agent.genome});
+        snap.agents.push_back(SnapshotAgent{agent.id, agent.pos, agent.energy, agent.alive,
+                                            agent.genome, agent.parent_id, agent.generation});
     }
 
     const auto& food_grid = world.food();
@@ -213,6 +213,8 @@ std::string snapshot_to_json(const Snapshot& snap) {
         aj["energy"] = a.energy;
         aj["alive"] = a.alive;
         aj["genome"] = genome_to_hex(a.genome);
+        aj["parent_id"] = a.parent_id;
+        aj["generation"] = a.generation;
         agents_arr.push_back(aj);
     }
     j["agents"] = agents_arr;
@@ -243,6 +245,12 @@ Snapshot snapshot_from_json(const std::string& json_str) {
         a.alive = aj.at("alive").get<bool>();
         if (aj.contains("genome")) {
             a.genome = hex_to_genome(aj.at("genome").get<std::string>());
+        }
+        if (aj.contains("parent_id")) {
+            a.parent_id = aj.at("parent_id").get<std::uint64_t>();
+        }
+        if (aj.contains("generation")) {
+            a.generation = aj.at("generation").get<std::uint64_t>();
         }
         snap.agents.push_back(a);
     }

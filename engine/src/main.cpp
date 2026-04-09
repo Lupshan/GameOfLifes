@@ -1,3 +1,4 @@
+#include "engine/lineage_log.hpp"
 #include "engine/simulation.hpp"
 #include "engine/snapshot_json.hpp"
 #include "engine/stats.hpp"
@@ -36,6 +37,7 @@ int main(int argc, char* argv[]) {
 
     std::filesystem::path config_path = "engine/config/default.toml";
     std::filesystem::path snapshot_dir;
+    std::filesystem::path lineage_path;
 
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
@@ -43,8 +45,11 @@ int main(int argc, char* argv[]) {
             snapshot_dir = argv[++i];
         } else if (arg == "--config" && i + 1 < argc) {
             config_path = argv[++i];
+        } else if (arg == "--lineage-log" && i + 1 < argc) {
+            lineage_path = argv[++i];
         } else {
-            std::cerr << "usage: gameoflifes_engine [--config <path>] [--dump-snapshots <dir>]\n";
+            std::cerr << "usage: gameoflifes_engine [--config <path>] "
+                         "[--dump-snapshots <dir>] [--lineage-log <path>]\n";
             return EXIT_FAILURE;
         }
     }
@@ -65,7 +70,9 @@ int main(int argc, char* argv[]) {
         dump_snapshot(world, snapshot_dir);
     }
 
-    gol::Simulation sim(world);
+    gol::LineageLog lineage_log(lineage_path);
+    gol::Simulation sim = lineage_log.enabled() ? gol::Simulation(world, lineage_log)
+                                                : gol::Simulation(world);
     for (int t = 0; t < n_ticks; ++t) {
         sim.tick();
         if (!snapshot_dir.empty()) {

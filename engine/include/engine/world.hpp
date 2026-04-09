@@ -21,6 +21,8 @@ class World {
 
     std::uint64_t spawn_agent(Position pos, int energy);
     std::uint64_t spawn_agent(Position pos, int energy, const Genome& genome);
+    std::uint64_t spawn_child(Position pos, int energy, const Genome& genome,
+                              std::uint64_t parent_id, std::uint64_t generation);
 
     const std::vector<Agent>& agents() const noexcept;
     std::vector<Agent>& agents() noexcept;

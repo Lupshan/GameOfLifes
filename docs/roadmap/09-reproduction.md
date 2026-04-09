@@ -1,8 +1,8 @@
 # 09 — Reproduction & inheritance
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Close the evolutionary loop: agents that survive and accumulate energy reproduce, offspring inherit a mutated genome, dead agents leave their lineage behind. After this step, a multi-generation run shows trait drift over time.
@@ -26,7 +26,7 @@ Close the evolutionary loop: agents that survive and accumulate energy reproduce
 - Reproduction step happens after movement, before reap.
 
 ## Definition of Done
-- [ ] Reproduction rule implemented and tested.
-- [ ] Lineage log written and parseable.
-- [ ] Multi-generation functional test passes (selection pressure observable).
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Reproduction rule implemented and tested.
+- [x] Lineage log written and parseable (`--lineage-log` CLI flag).
+- [x] Multi-generation functional test passes (selection pressure observable).
+- [x] `docs/roadmap/README.md` table updated to `done`.

@@ -79,7 +79,7 @@ TEST_CASE("reap_dead removes dead agents") {
     world.spawn_agent(gol::Position{1, 1}, 10);
     world.agents()[1].alive = false;
 
-    gol::reap_dead(world);
+    gol::reap_dead(world, nullptr);
 
     CHECK(world.agents().size() == 1);
     CHECK(world.agents()[0].id == 0);
