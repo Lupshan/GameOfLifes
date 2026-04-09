@@ -5,6 +5,7 @@
 #include "engine/stats.hpp"
 #include "engine/terrain.hpp"
 #include "engine/traits.hpp"
+#include "engine/world_clock.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -129,9 +130,15 @@ void reproduce_agents(World& world, LineageLog* log) {
 }
 
 void respawn_resources(World& world) {
-    double base_food_rate = world.config().food_spawn_rate;
+    double season_factor = 1.0;
+    if (world.config().year_length > 0) {
+        Season s = current_season(world.tick_count(), world.config().year_length);
+        season_factor = seasonal_resource_factor(s);
+    }
+
+    double base_food_rate = world.config().food_spawn_rate * season_factor;
     double base_water_rate = base_food_rate * 0.5;
-    double base_mineral_rate = base_food_rate * 0.1;
+    double base_mineral_rate = world.config().food_spawn_rate * 0.1; // minerals not seasonal
     int w = world.config().width;
     int h = world.config().height;
 

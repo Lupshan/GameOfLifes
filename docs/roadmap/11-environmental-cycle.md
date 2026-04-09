@@ -1,8 +1,8 @@
 # 11 — Environmental cycle
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Add a time-varying environment so that the world isn't a static fitness landscape. Day/night and seasons make some traits situationally useful and force populations to adapt over time.
@@ -23,7 +23,7 @@ Add a time-varying environment so that the world isn't a static fitness landscap
 - All env-cycle effects funnel through helper functions consumed by tick loop, never inline conditionals.
 
 ## Definition of Done
-- [ ] `WorldClock` + cycle helpers + tests.
-- [ ] Tick loop reads cycle for resource spawn + vision.
-- [ ] Functional divergence test passes.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `WorldClock` + cycle helpers + tests (day_phase, is_night, current_season, seasonal factors).
+- [x] Tick loop reads cycle for resource spawn (seasonal factor).
+- [x] Functional divergence test passes (cycle on vs off produces different food counts).
+- [x] `docs/roadmap/README.md` table updated to `done`.

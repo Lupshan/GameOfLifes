@@ -37,6 +37,8 @@ WorldConfig load_world_config(const std::filesystem::path& path) {
     cfg.food_spawn_rate = get_or<double>(tbl, "food_spawn_rate", cfg.food_spawn_rate);
     cfg.starting_energy = get_or<int64_t>(tbl, "starting_energy", cfg.starting_energy);
     cfg.mutation_rate = get_or<double>(tbl, "mutation_rate", cfg.mutation_rate);
+    cfg.day_length = get_or<int64_t>(tbl, "day_length", cfg.day_length);
+    cfg.year_length = get_or<int64_t>(tbl, "year_length", cfg.year_length);
     return cfg;
 }
 

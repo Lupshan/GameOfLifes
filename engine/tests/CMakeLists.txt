@@ -12,6 +12,7 @@ add_executable(engine_tests
     test_genome.cpp
     test_reproduction.cpp
     test_ecosystem.cpp
+    test_world_clock.cpp
 )
 target_link_libraries(engine_tests PRIVATE engine_core doctest::doctest)
 
