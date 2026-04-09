@@ -7,7 +7,7 @@
 namespace gol {
 
 class Rng {
-public:
+  public:
     explicit Rng(std::uint64_t seed) noexcept;
 
     int uniform_int(int min_inclusive, int max_inclusive);
@@ -16,11 +16,11 @@ public:
 
     std::uint64_t seed() const noexcept;
 
-private:
+  private:
     std::uint64_t seed_;
     std::mt19937_64 engine_;
 };
 
-}  // namespace gol
+} // namespace gol
 
-#endif  // GAMEOFLIFES_ENGINE_RNG_HPP
+#endif // GAMEOFLIFES_ENGINE_RNG_HPP

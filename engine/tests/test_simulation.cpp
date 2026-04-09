@@ -1,6 +1,6 @@
-#include <doctest/doctest.h>
-
 #include "engine/simulation.hpp"
+
+#include <doctest/doctest.h>
 
 static gol::WorldConfig tiny_config() {
     gol::WorldConfig cfg;

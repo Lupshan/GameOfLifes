@@ -1,17 +1,14 @@
 #include "engine/world_config.hpp"
 
-#include <toml++/toml.hpp>
-
 #include <stdexcept>
 #include <string>
+#include <toml++/toml.hpp>
 
 namespace gol {
 
 namespace {
 
-template <typename T>
-T get_or(const toml::table& tbl, std::string_view key, T fallback)
-{
+template <typename T> T get_or(const toml::table& tbl, std::string_view key, T fallback) {
     auto node = tbl[key];
     if (auto v = node.value<T>()) {
         return *v;
@@ -19,10 +16,9 @@ T get_or(const toml::table& tbl, std::string_view key, T fallback)
     return fallback;
 }
 
-}  // namespace
+} // namespace
 
-WorldConfig load_world_config(const std::filesystem::path& path)
-{
+WorldConfig load_world_config(const std::filesystem::path& path) {
     toml::table tbl;
     try {
         tbl = toml::parse_file(path.string());
@@ -33,7 +29,8 @@ WorldConfig load_world_config(const std::filesystem::path& path)
     WorldConfig cfg;
     cfg.width = get_or<int64_t>(tbl, "width", cfg.width);
     cfg.height = get_or<int64_t>(tbl, "height", cfg.height);
-    cfg.seed = static_cast<std::uint64_t>(get_or<int64_t>(tbl, "seed", static_cast<int64_t>(cfg.seed)));
+    cfg.seed =
+        static_cast<std::uint64_t>(get_or<int64_t>(tbl, "seed", static_cast<int64_t>(cfg.seed)));
     cfg.initial_agents = get_or<int64_t>(tbl, "initial_agents", cfg.initial_agents);
     cfg.initial_food = get_or<int64_t>(tbl, "initial_food", cfg.initial_food);
     cfg.max_ticks = get_or<int64_t>(tbl, "max_ticks", cfg.max_ticks);
@@ -42,4 +39,4 @@ WorldConfig load_world_config(const std::filesystem::path& path)
     return cfg;
 }
 
-}  // namespace gol
+} // namespace gol

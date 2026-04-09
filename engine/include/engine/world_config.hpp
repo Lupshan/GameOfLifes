@@ -12,13 +12,13 @@ struct WorldConfig {
     std::uint64_t seed = 1;
     int initial_agents = 16;
     int initial_food = 64;
-    int max_ticks = 0;  // 0 = unbounded
+    int max_ticks = 0; // 0 = unbounded
     double food_spawn_rate = 0.05;
     int starting_energy = 100;
 };
 
 WorldConfig load_world_config(const std::filesystem::path& path);
 
-}  // namespace gol
+} // namespace gol
 
-#endif  // GAMEOFLIFES_ENGINE_WORLD_CONFIG_HPP
+#endif // GAMEOFLIFES_ENGINE_WORLD_CONFIG_HPP

@@ -6,13 +6,13 @@
 namespace gol {
 
 class Simulation {
-public:
+  public:
     explicit Simulation(World& world);
 
     void tick();
     void run(int n_ticks);
 
-private:
+  private:
     World& world_;
 };
 

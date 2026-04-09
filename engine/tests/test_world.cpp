@@ -1,6 +1,6 @@
-#include <doctest/doctest.h>
-
 #include "engine/world.hpp"
+
+#include <doctest/doctest.h>
 
 static gol::WorldConfig tiny_config() {
     gol::WorldConfig cfg;
@@ -37,8 +37,7 @@ TEST_CASE("agent moves toroidally") {
 
     gol::Agent& agent = world.agents()[0];
     // move east from x=7 on width=8 → wraps to x=0
-    gol::Position new_pos = world.wrap_position(
-        gol::Position{agent.pos.x + 1, agent.pos.y});
+    gol::Position new_pos = world.wrap_position(gol::Position{agent.pos.x + 1, agent.pos.y});
     agent.pos = new_pos;
 
     CHECK(agent.pos.x == 0);
@@ -51,8 +50,7 @@ TEST_CASE("agent moves toroidally negative") {
 
     gol::Agent& agent = world.agents()[0];
     // move west from x=0 → wraps to x=7
-    gol::Position new_pos = world.wrap_position(
-        gol::Position{agent.pos.x - 1, agent.pos.y});
+    gol::Position new_pos = world.wrap_position(gol::Position{agent.pos.x - 1, agent.pos.y});
     agent.pos = new_pos;
 
     CHECK(agent.pos.x == 7);

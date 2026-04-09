@@ -3,11 +3,9 @@
 namespace gol {
 
 World::World(const WorldConfig& config)
-    : config_(config),
-      food_(config.width, config.height, 0),
-      rng_(config.seed),
-      tick_count_(0),
-      next_id_(0) {}
+    : config_(config), food_(config.width, config.height, 0), rng_(config.seed), tick_count_(0),
+      next_id_(0) {
+}
 
 void World::init() {
     for (int i = 0; i < config_.initial_food; ++i) {

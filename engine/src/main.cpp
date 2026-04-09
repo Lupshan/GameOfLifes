@@ -21,8 +21,7 @@ int main() {
     world.init();
 
     std::cout << "world " << config.width << "x" << config.height
-              << "  agents=" << config.initial_agents
-              << "  food=" << config.initial_food
+              << "  agents=" << config.initial_agents << "  food=" << config.initial_food
               << "  seed=" << config.seed << "\n";
 
     gol::Simulation sim(world);

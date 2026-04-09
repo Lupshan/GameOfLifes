@@ -12,7 +12,7 @@
 namespace gol {
 
 class World {
-public:
+  public:
     explicit World(const WorldConfig& config);
 
     void init();
@@ -33,7 +33,7 @@ public:
 
     Rng& rng() noexcept;
 
-private:
+  private:
     WorldConfig config_;
     Grid<std::uint8_t> food_;
     std::vector<Agent> agents_;

@@ -4,10 +4,10 @@
 
 namespace gol {
 
-Rng::Rng(std::uint64_t seed) noexcept : seed_(seed), engine_(seed) {}
+Rng::Rng(std::uint64_t seed) noexcept : seed_(seed), engine_(seed) {
+}
 
-int Rng::uniform_int(int min_inclusive, int max_inclusive)
-{
+int Rng::uniform_int(int min_inclusive, int max_inclusive) {
     if (min_inclusive > max_inclusive) {
         throw std::invalid_argument("uniform_int: min > max");
     }
@@ -15,14 +15,12 @@ int Rng::uniform_int(int min_inclusive, int max_inclusive)
     return dist(engine_);
 }
 
-double Rng::uniform_real()
-{
+double Rng::uniform_real() {
     std::uniform_real_distribution<double> dist(0.0, 1.0);
     return dist(engine_);
 }
 
-bool Rng::chance(double p)
-{
+bool Rng::chance(double p) {
     if (p <= 0.0) {
         return false;
     }
@@ -32,9 +30,8 @@ bool Rng::chance(double p)
     return uniform_real() < p;
 }
 
-std::uint64_t Rng::seed() const noexcept
-{
+std::uint64_t Rng::seed() const noexcept {
     return seed_;
 }
 
-}  // namespace gol
+} // namespace gol

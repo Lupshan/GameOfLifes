@@ -7,7 +7,8 @@
 
 namespace gol {
 
-Simulation::Simulation(World& world) : world_(world) {}
+Simulation::Simulation(World& world) : world_(world) {
+}
 
 void step_agent(Agent& agent, World& world) {
     if (!agent.alive) {

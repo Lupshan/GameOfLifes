@@ -28,10 +28,8 @@ void print_stats(const World& world) {
         avg_energy = static_cast<double>(total_energy) / alive_count;
     }
 
-    std::cout << "tick " << world.tick_count()
-              << "  alive=" << alive_count
-              << "  food=" << food_count
-              << "  avg_energy=" << avg_energy << "\n";
+    std::cout << "tick " << world.tick_count() << "  alive=" << alive_count
+              << "  food=" << food_count << "  avg_energy=" << avg_energy << "\n";
 }
 
 } // namespace gol
