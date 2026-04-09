@@ -27,6 +27,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tomlplusplus)
 
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.3
+)
+FetchContent_MakeAvailable(nlohmann_json)
+
 # --- engine_core static library ---
 
 add_library(engine_core STATIC
@@ -37,9 +44,10 @@ add_library(engine_core STATIC
     src/world.cpp
     src/simulation.cpp
     src/stats.cpp
+    src/snapshot_json.cpp
 )
 target_include_directories(engine_core PUBLIC include)
-target_link_libraries(engine_core PUBLIC tomlplusplus::tomlplusplus)
+target_link_libraries(engine_core PUBLIC tomlplusplus::tomlplusplus nlohmann_json::nlohmann_json)
 
 # --- gameoflifes_engine executable ---
 

@@ -1,8 +1,8 @@
 # 07 — World snapshot serialization
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Make the world state observable from outside the engine. Serialize a tick to JSON and write it to stdout/file. Every later step that involves the backend, frontend, or replays will consume this format.
@@ -26,8 +26,8 @@ Make the world state observable from outside the engine. Serialize a tick to JSO
 - `nlohmann/json` pinned via FetchContent.
 
 ## Definition of Done
-- [ ] `Snapshot` round-trips losslessly through JSON (test).
-- [ ] `--dump-snapshots` flag produces files readable by hand.
-- [ ] Schema version field present.
-- [ ] ADR `005-snapshot-schema.md` written documenting the format.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `Snapshot` round-trips losslessly through JSON (test).
+- [x] `--dump-snapshots` flag produces files readable by hand.
+- [x] Schema version field present.
+- [x] ADR `007-snapshot-schema.md` written documenting the format (005 was already taken).
+- [x] `docs/roadmap/README.md` table updated to `done`.

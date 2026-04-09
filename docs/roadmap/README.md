@@ -19,7 +19,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 | 04 | World grid + primitives           | [04-world-grid.md](04-world-grid.md)                          | done        |
 | 05 | RNG + config                      | [05-rng-config.md](05-rng-config.md)                          | done        |
 | 06 | Agents + tick loop                | [06-agents-tick-loop.md](06-agents-tick-loop.md)              | done        |
-| 07 | World snapshot serialization      | [07-snapshot-serialization.md](07-snapshot-serialization.md)  | not started |
+| 07 | World snapshot serialization      | [07-snapshot-serialization.md](07-snapshot-serialization.md)  | done        |
 
 ## Phase 2 — Genetics & ecosystem
 
