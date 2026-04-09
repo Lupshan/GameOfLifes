@@ -25,7 +25,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 
 | #  | Step                              | File                                                          | Status      |
 |----|-----------------------------------|---------------------------------------------------------------|-------------|
-| 08 | Genome, traits, mutation          | [08-genome-traits.md](08-genome-traits.md)                    | not started |
+| 08 | Genome, traits, mutation          | [08-genome-traits.md](08-genome-traits.md)                    | done        |
 | 09 | Reproduction & inheritance        | [09-reproduction.md](09-reproduction.md)                      | not started |
 | 10 | Multi-resource ecosystem          | [10-ecosystem-depth.md](10-ecosystem-depth.md)                | not started |
 | 11 | Environmental cycle               | [11-environmental-cycle.md](11-environmental-cycle.md)        | not started |

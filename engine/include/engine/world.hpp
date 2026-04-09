@@ -20,6 +20,7 @@ class World {
     Position wrap_position(Position p) const;
 
     std::uint64_t spawn_agent(Position pos, int energy);
+    std::uint64_t spawn_agent(Position pos, int energy, const Genome& genome);
 
     const std::vector<Agent>& agents() const noexcept;
     std::vector<Agent>& agents() noexcept;

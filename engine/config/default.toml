@@ -10,3 +10,4 @@ max_ticks = 0          # 0 = unbounded
 
 food_spawn_rate = 0.05
 starting_energy = 100
+mutation_rate = 0.01

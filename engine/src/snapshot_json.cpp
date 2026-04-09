@@ -5,6 +5,8 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <iomanip>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -140,6 +142,23 @@ std::vector<std::uint8_t> unpack_bits(const std::vector<std::uint8_t>& packed,
     return cells;
 }
 
+std::string genome_to_hex(const Genome& g) {
+    std::ostringstream oss;
+    for (auto byte : g) {
+        oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
+    }
+    return oss.str();
+}
+
+Genome hex_to_genome(const std::string& hex) {
+    Genome g{};
+    for (std::size_t i = 0; i < GENOME_LENGTH && i * 2 + 1 < hex.size(); ++i) {
+        std::string byte_str = hex.substr(i * 2, 2);
+        g[i] = static_cast<std::uint8_t>(std::stoul(byte_str, nullptr, 16));
+    }
+    return g;
+}
+
 } // anonymous namespace
 
 // ---------------------------------------------------------------------------
@@ -155,7 +174,7 @@ Snapshot capture_snapshot(const World& world) {
 
     for (const auto& agent : world.agents()) {
         snap.agents.push_back(
-            SnapshotAgent{agent.id, agent.pos, agent.energy, agent.alive});
+            SnapshotAgent{agent.id, agent.pos, agent.energy, agent.alive, agent.genome});
     }
 
     const auto& food_grid = world.food();
@@ -193,6 +212,7 @@ std::string snapshot_to_json(const Snapshot& snap) {
         aj["y"] = a.pos.y;
         aj["energy"] = a.energy;
         aj["alive"] = a.alive;
+        aj["genome"] = genome_to_hex(a.genome);
         agents_arr.push_back(aj);
     }
     j["agents"] = agents_arr;
@@ -221,6 +241,9 @@ Snapshot snapshot_from_json(const std::string& json_str) {
         a.pos.y = aj.at("y").get<int>();
         a.energy = aj.at("energy").get<int>();
         a.alive = aj.at("alive").get<bool>();
+        if (aj.contains("genome")) {
+            a.genome = hex_to_genome(aj.at("genome").get<std::string>());
+        }
         snap.agents.push_back(a);
     }
 

@@ -1,4 +1,6 @@
+#include "engine/genome.hpp"
 #include "engine/simulation.hpp"
+#include "engine/traits.hpp"
 
 #include <doctest/doctest.h>
 
@@ -23,8 +25,13 @@ TEST_CASE("step_agent consumes food and gains energy") {
     cfg.initial_food = 0;
     gol::World world(cfg);
 
+    // Use a genome with speed=1, metabolism=1 for predictable behavior.
+    gol::Genome g{};
+    g[gol::GENE_SPEED] = 0;      // speed = 1
+    g[gol::GENE_METABOLISM] = 0;  // metabolism = 1
+
     // place agent at center, fill all neighbours with food
-    world.spawn_agent(gol::Position{4, 4}, 10);
+    world.spawn_agent(gol::Position{4, 4}, 10, g);
     world.food().set(gol::Position{4, 3}, 1);
     world.food().set(gol::Position{4, 5}, 1);
     world.food().set(gol::Position{3, 4}, 1);
@@ -34,7 +41,7 @@ TEST_CASE("step_agent consumes food and gains energy") {
     gol::step_agent(agent, world);
 
     // agent moved to one neighbour, ate the food there
-    // energy: started 10, +1 food, -1 tick cost = 10
+    // energy: started 10, +1 food, -1 metabolism = 10
     CHECK(agent.energy == 10);
     CHECK(world.food().at(agent.pos) == 0);
 }
@@ -47,12 +54,15 @@ TEST_CASE("step_agent drains energy and kills at zero") {
     cfg.initial_food = 0;
     gol::World world(cfg);
 
-    world.spawn_agent(gol::Position{0, 0}, 1);
+    gol::Genome g{};
+    g[gol::GENE_SPEED] = 0;      // speed = 1
+    g[gol::GENE_METABOLISM] = 0;  // metabolism = 1
+    world.spawn_agent(gol::Position{0, 0}, 1, g);
 
     gol::Agent& agent = world.agents()[0];
     gol::step_agent(agent, world);
 
-    // 1 energy - 1 tick cost = 0 → dead
+    // 1 energy - 1 metabolism = 0 → dead
     CHECK(agent.energy <= 0);
     CHECK_FALSE(agent.alive);
 }

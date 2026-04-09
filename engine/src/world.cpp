@@ -25,8 +25,13 @@ Position World::wrap_position(Position p) const {
 }
 
 std::uint64_t World::spawn_agent(Position pos, int energy) {
+    Genome g = random_genome(rng_);
+    return spawn_agent(pos, energy, g);
+}
+
+std::uint64_t World::spawn_agent(Position pos, int energy, const Genome& genome) {
     std::uint64_t id = next_id_++;
-    agents_.push_back(Agent{pos, energy, true, id});
+    agents_.push_back(Agent{pos, energy, true, id, genome});
     return id;
 }
 

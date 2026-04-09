@@ -45,6 +45,8 @@ add_library(engine_core STATIC
     src/simulation.cpp
     src/stats.cpp
     src/snapshot_json.cpp
+    src/genome.cpp
+    src/traits.cpp
 )
 target_include_directories(engine_core PUBLIC include)
 target_link_libraries(engine_core PUBLIC tomlplusplus::tomlplusplus nlohmann_json::nlohmann_json)

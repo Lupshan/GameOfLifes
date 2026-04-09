@@ -2,6 +2,7 @@
 
 #include "engine/direction.hpp"
 #include "engine/stats.hpp"
+#include "engine/traits.hpp"
 
 #include <algorithm>
 
@@ -14,20 +15,27 @@ void step_agent(Agent& agent, World& world) {
     if (!agent.alive) {
         return;
     }
-    int dir_index = world.rng().uniform_int(0, 3);
-    auto dir = static_cast<Direction>(dir_index);
-    Position offset = to_offset(dir);
 
-    Position raw{agent.pos.x + offset.x, agent.pos.y + offset.y};
-    agent.pos = world.wrap_position(raw);
+    Traits traits = decode(agent.genome);
 
-    std::uint8_t& cell = world.food().at(agent.pos);
-    if (cell > 0) {
-        agent.energy += cell;
-        cell = 0;
+    // Speed determines how many moves the agent gets per tick.
+    for (int step = 0; step < traits.speed; ++step) {
+        int dir_index = world.rng().uniform_int(0, 3);
+        auto dir = static_cast<Direction>(dir_index);
+        Position offset = to_offset(dir);
+
+        Position raw{agent.pos.x + offset.x, agent.pos.y + offset.y};
+        agent.pos = world.wrap_position(raw);
+
+        std::uint8_t& cell = world.food().at(agent.pos);
+        if (cell > 0) {
+            agent.energy += cell;
+            cell = 0;
+        }
     }
 
-    agent.energy -= 1;
+    // Metabolism determines energy drain per tick.
+    agent.energy -= traits.metabolism;
     if (agent.energy <= 0) {
         agent.alive = false;
     }

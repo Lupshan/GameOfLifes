@@ -15,6 +15,7 @@ struct WorldConfig {
     int max_ticks = 0; // 0 = unbounded
     double food_spawn_rate = 0.05;
     int starting_energy = 100;
+    double mutation_rate = 0.01;
 };
 
 WorldConfig load_world_config(const std::filesystem::path& path);

@@ -9,6 +9,7 @@ add_executable(engine_tests
     test_world.cpp
     test_simulation.cpp
     test_snapshot.cpp
+    test_genome.cpp
 )
 target_link_libraries(engine_tests PRIVATE engine_core doctest::doctest)
 

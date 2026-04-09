@@ -2,6 +2,7 @@
 #define GAMEOFLIFES_ENGINE_SNAPSHOT_HPP
 
 #include "engine/agent.hpp"
+#include "engine/genome.hpp"
 #include "engine/position.hpp"
 
 #include <cstdint>
@@ -15,6 +16,7 @@ struct SnapshotAgent {
     Position pos;
     int energy;
     bool alive;
+    Genome genome;
 };
 
 struct Snapshot {

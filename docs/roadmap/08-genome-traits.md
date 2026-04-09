@@ -1,8 +1,8 @@
 # 08 — Genome, traits, mutation
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-09
 
 ## Goal
 Introduce heritable variation. Agents now have a `Genome` decoding into trait values that influence simulation behavior (vision, speed, metabolism…). This is the foundation of the project's central pillar — evolution.
@@ -27,8 +27,8 @@ Introduce heritable variation. Agents now have a `Genome` decoding into trait va
 - Mutation rate is a `WorldConfig` parameter.
 
 ## Definition of Done
-- [ ] `Genome`, `Traits`, `decode`, `mutate` exist with tests.
-- [ ] `Agent` carries a genome; tick uses decoded traits.
-- [ ] Statistical mutation test (≥1000 trials) within tolerance.
-- [ ] ADR 006 written.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `Genome`, `Traits`, `decode`, `mutate` exist with tests.
+- [x] `Agent` carries a genome; tick uses decoded traits.
+- [x] Statistical mutation test (≥1000 trials) within tolerance.
+- [x] ADR 008 written (006 was already taken by world-generation).
+- [x] `docs/roadmap/README.md` table updated to `done`.
