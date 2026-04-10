@@ -1,8 +1,13 @@
 [project]
 name = "gameoflifes-backend"
-version = "0.1.0"
+version = "1.0.0"
 description = "GameOfLifes FastAPI backend."
 requires-python = ">=3.12"
+license = "MIT"
+
+[project.urls]
+Homepage = "https://github.com/Lupshan/GameOfLifes"
+Repository = "https://github.com/Lupshan/GameOfLifes"
 dependencies = [
     "fastapi>=0.115,<0.116",
     "uvicorn[standard]>=0.32,<0.33",
