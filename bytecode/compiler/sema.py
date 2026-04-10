@@ -125,7 +125,8 @@ def _check_stmt(stmt: Stmt, func: FunctionInfo, result: SemaResult) -> None:
     elif isinstance(stmt, WhileStmt):
         _check_expr(stmt.condition, func, result)
         _check_stmts(stmt.body, func, result)
-    elif isinstance(stmt, ReturnStmt):
+    else:
+        assert isinstance(stmt, ReturnStmt)
         if stmt.value is not None:
             _check_expr(stmt.value, func, result)
 
@@ -141,7 +142,8 @@ def _check_expr(expr: Expr, func: FunctionInfo, result: SemaResult) -> None:
         _check_expr(expr.right, func, result)
     elif isinstance(expr, UnaryOp):
         _check_expr(expr.operand, func, result)
-    elif isinstance(expr, Call):
+    else:
+        assert isinstance(expr, Call)
         # Check if it's a builtin or user function.
         if expr.name in BUILTINS:
             expected_arity = BUILTINS[expr.name]

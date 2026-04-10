@@ -270,7 +270,8 @@ def _emit_stmt(
         offset = em.pos() - jmp_false_pos
         em.patch_i16(jmp_false_pos, offset)
 
-    elif isinstance(stmt, ReturnStmt):
+    else:
+        assert isinstance(stmt, ReturnStmt)
         if stmt.value is not None:
             _emit_expr(stmt.value, func, sema, em, func_addrs)
         em.emit_u8(RETURN)
@@ -333,7 +334,8 @@ def _emit_expr(
         elif expr.op == "!":
             em.emit_u8(NOT)
 
-    elif isinstance(expr, Call):
+    else:
+        assert isinstance(expr, Call)
         if expr.name in PERCEPTION_EXTRACT:
             base_op, extract_ops = PERCEPTION_EXTRACT[expr.name]
             em.emit_u8(base_op)
