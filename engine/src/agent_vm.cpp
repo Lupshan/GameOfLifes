@@ -18,6 +18,11 @@ void AgentIntrinsicHandler::set_agent_index(std::size_t index) {
 }
 
 Agent& AgentIntrinsicHandler::agent() {
+    if (agent_index_ >= world_.agents().size()) {
+        // Index became stale (e.g., agents reaped mid-tick). Fall back to first alive agent.
+        // This should not happen in normal flow but prevents UB.
+        agent_index_ = 0;
+    }
     return world_.agents()[agent_index_];
 }
 

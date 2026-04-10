@@ -154,6 +154,8 @@ VmStatus Vm::step() {
         return VmStatus::Ok;
     }
 
+    // Arithmetic uses wrapping semantics (like most VMs / hardware).
+    // Overflow silently wraps around int32 range. This is intentional.
     case op::ADD: {
         if (sp_ < 2) {
             return VmStatus::StackUnderflow;
@@ -277,16 +279,20 @@ VmStatus Vm::step() {
         return VmStatus::Ok;
     }
 
+    // JMP offset convention:
+    // After reading the i16 operand, pc_ points to the byte AFTER the operand.
+    // The offset is relative to the START of the operand (pc_ - 2).
+    // So: target = (pc_ - 2) + offset.
+    // Example: JMP at byte 0, operand at bytes 1-2, pc_=3 after read.
+    //   offset=0 → target=1 (loop on operand, unusual)
+    //   offset=7 → target=8 (skip 5 bytes ahead of operand)
+    //   offset=-1 → target=0 (jump back to the JMP opcode itself)
     case op::JMP: {
         if (pc_ + 2 > bc_->code.size()) {
             return VmStatus::OutOfBoundsJump;
         }
         std::int32_t offset = read_i16();
-        std::int64_t target = static_cast<std::int64_t>(pc_) + offset - 2;
-        // -2 because PC already advanced past the operand, but offset is relative to opcode+operand
-        // Actually, let's define: JMP offset means PC = PC_after_operand + offset - 2
-        // Simpler: target = PC_before_operand + offset
-        target = static_cast<std::int64_t>(pc_) - 2 + offset;
+        std::int64_t target = static_cast<std::int64_t>(pc_) - 2 + offset;
         if (target < 0 || target > static_cast<std::int64_t>(bc_->code.size())) {
             return VmStatus::OutOfBoundsJump;
         }
