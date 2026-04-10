@@ -1,8 +1,8 @@
 # 27 — World viewer (canvas)
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 The flagship feature for the public: a canvas rendering of the live world, fed by the WebSocket stream from step 24. Anyone visiting the site sees the world tick.
@@ -26,8 +26,9 @@ The flagship feature for the public: a canvas rendering of the live world, fed b
 - Avoid React-style reactivity per cell — direct canvas draw is faster.
 
 ## Definition of Done
-- [ ] Live world renders at target framerate.
-- [ ] Pan + zoom works.
-- [ ] HUD shows live stats.
-- [ ] Public route accessible without auth.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Live world renders via requestAnimationFrame (Canvas2D, decoupled from WS).
+- [x] Pan (mouse drag) + zoom (wheel) works.
+- [x] HUD shows tick, agent count, grid size, seed.
+- [x] Public route `/world` accessible without auth.
+- [x] Decode utilities tested (base64, bitfield unpacking).
+- [x] `docs/roadmap/README.md` table updated to `done`.
