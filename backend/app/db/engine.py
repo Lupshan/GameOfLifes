@@ -26,6 +26,13 @@ async def create_tables() -> None:
         await conn.run_sync(SQLModel.metadata.create_all)
 
 
+def get_session_factory() -> async_sessionmaker[AsyncSession]:
+    """Return the session factory for use outside request scope (e.g. lifespan)."""
+    if _session_factory is None:
+        raise RuntimeError("Database not initialized. Call init_db() first.")
+    return _session_factory
+
+
 async def get_session() -> AsyncIterator[AsyncSession]:
     if _session_factory is None:
         raise RuntimeError("Database not initialized. Call init_db() first.")

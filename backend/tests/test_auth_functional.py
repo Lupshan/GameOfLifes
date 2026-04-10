@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from httpx import AsyncClient
 
-
 _PASS = "StrongPass1"
 
 
@@ -25,9 +24,7 @@ async def test_signup_sets_cookie(client: AsyncClient) -> None:
 
 async def test_signup_cookie_grants_access_to_me(client: AsyncClient) -> None:
     """After signup, the cookie alone (no Bearer header) must authenticate /me."""
-    resp = await client.post(
-        "/auth/signup", json={"email": "flow@test.com", "password": _PASS}
-    )
+    resp = await client.post("/auth/signup", json={"email": "flow@test.com", "password": _PASS})
     assert resp.status_code == 201
     token_cookie = resp.cookies["gol_token"]
 
@@ -39,9 +36,7 @@ async def test_signup_cookie_grants_access_to_me(client: AsyncClient) -> None:
 async def test_login_sets_cookie(client: AsyncClient) -> None:
     """Login response must include a Set-Cookie header with gol_token."""
     await client.post("/auth/signup", json={"email": "logcook@test.com", "password": _PASS})
-    resp = await client.post(
-        "/auth/login", json={"email": "logcook@test.com", "password": _PASS}
-    )
+    resp = await client.post("/auth/login", json={"email": "logcook@test.com", "password": _PASS})
     assert resp.status_code == 200
     assert "gol_token" in resp.cookies
 
@@ -119,7 +114,9 @@ async def test_signup_missing_fields(client: AsyncClient) -> None:
 
 
 async def test_signup_empty_body(client: AsyncClient) -> None:
-    resp = await client.post("/auth/signup", content="", headers={"Content-Type": "application/json"})
+    resp = await client.post(
+        "/auth/signup", content="", headers={"Content-Type": "application/json"}
+    )
     assert resp.status_code == 422
 
 
@@ -127,9 +124,7 @@ async def test_signup_empty_body(client: AsyncClient) -> None:
 
 
 async def test_signup_email_normalised_to_lowercase(client: AsyncClient) -> None:
-    resp = await client.post(
-        "/auth/signup", json={"email": "MiXeD@Test.COM", "password": _PASS}
-    )
+    resp = await client.post("/auth/signup", json={"email": "MiXeD@Test.COM", "password": _PASS})
     assert resp.status_code == 201
     token = resp.cookies["gol_token"]
 
@@ -141,18 +136,14 @@ async def test_signup_email_normalised_to_lowercase(client: AsyncClient) -> None
 
 
 async def test_signup_response_has_token_fields(client: AsyncClient) -> None:
-    resp = await client.post(
-        "/auth/signup", json={"email": "shape@test.com", "password": _PASS}
-    )
+    resp = await client.post("/auth/signup", json={"email": "shape@test.com", "password": _PASS})
     data = resp.json()
     assert "access_token" in data
     assert data["token_type"] == "bearer"
 
 
 async def test_me_response_shape(client: AsyncClient) -> None:
-    resp = await client.post(
-        "/auth/signup", json={"email": "mshape@test.com", "password": _PASS}
-    )
+    resp = await client.post("/auth/signup", json={"email": "mshape@test.com", "password": _PASS})
     token = resp.cookies["gol_token"]
 
     me_resp = await client.get("/auth/me", cookies={"gol_token": token})

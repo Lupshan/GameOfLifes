@@ -1,6 +1,6 @@
 {
 	"name": "gameoflifes-frontend",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "GameOfLifes web frontend — world viewer, block editor, stats.",
 	"homepage": "https://github.com/Lupshan/GameOfLifes",
 	"repository": {

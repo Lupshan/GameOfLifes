@@ -18,7 +18,7 @@ from starlette.routing import Route
 from app.auth.router import router as auth_router
 from app.bots.router import router as bots_router
 from app.config import Settings, get_settings
-from app.db.engine import create_tables, init_db
+from app.db.engine import create_tables, get_session_factory, init_db
 from app.health.router import router as health_router
 from app.logging_config import setup_logging
 from app.metrics import metrics_endpoint
@@ -54,20 +54,61 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+        from sqlalchemy import select
+
+        from app.bots.service import get_latest_version
+        from app.db.models import Bot
+        from app.engine.service import EngineService
+        from app.ws.router import broadcast
+
         init_db(settings)  # type: ignore[arg-type]
         await create_tables()
+
+        # Start engine.
+        engine = EngineService(settings.engine_path)
+        await engine.start()
+        _app.state.engine = engine
+
+        # Bridge: engine snapshots → WS broadcast.
+        async def _snapshot_bridge() -> None:
+            q = engine.subscribe_snapshots()
+            try:
+                while True:
+                    snapshot = await q.get()
+                    broadcast(snapshot)
+            except asyncio.CancelledError:
+                engine.unsubscribe_snapshots(q)
+
+        bridge_task = asyncio.create_task(_snapshot_bridge())
+
+        # Load all published bots into the engine.
+        session_factory = get_session_factory()
+        async with session_factory() as session:
+            result = await session.execute(select(Bot).where(Bot.published.is_(True)))
+            for bot in result.scalars().all():
+                version = await get_latest_version(bot.id, session)
+                if version and version.compile_ok and version.bytecode:
+                    await engine.load_bot(bot.id, version.bytecode)
+
         prune_task = asyncio.create_task(_periodic_prune())
+
         yield
+
+        bridge_task.cancel()
         prune_task.cancel()
+        await engine.stop()
 
     from app.middleware.rate_limit import limiter
 
     app = FastAPI(title=settings.app_name, debug=settings.debug, lifespan=lifespan)
 
     # CORS — restrict to known frontend origins.
-    allowed_origins = ["http://localhost:3000", "http://localhost:5173"]
-    if not settings.debug:
-        allowed_origins = [f"https://{settings.app_name.lower()}.example.com"]
+    if settings.debug:
+        allowed_origins = ["http://localhost:3000", "http://localhost:5173"]
+    elif settings.cors_origin:
+        allowed_origins = [settings.cors_origin]
+    else:
+        allowed_origins = []
     app.add_middleware(
         CORSMiddleware,
         allow_origins=allowed_origins,

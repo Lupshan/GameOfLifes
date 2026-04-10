@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     jwt_secret: str = _DEFAULT_JWT_SECRET
     jwt_algorithm: str = "HS256"
     jwt_expire_days: int = 7
+    engine_path: str = "engine/build/gameoflifes_engine"
+    cors_origin: str = ""
 
     model_config = {"env_prefix": "GOL_"}
 

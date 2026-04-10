@@ -22,8 +22,13 @@ class EngineService:
         self._dispatcher_task: asyncio.Task[None] | None = None
 
     async def start(self) -> None:
+        self._ready = asyncio.Event()
         await self._process.start()
         self._dispatcher_task = asyncio.create_task(self._dispatch_events())
+        try:
+            await asyncio.wait_for(self._ready.wait(), timeout=10.0)
+        except TimeoutError:
+            logger.warning("Engine did not send READY within 10s, proceeding anyway")
 
     async def stop(self) -> None:
         await self._process.stop()
@@ -66,7 +71,10 @@ class EngineService:
                         await self._process.start()
                     continue
 
-                if event.event == EventType.SNAPSHOT:
+                if event.event == EventType.READY:
+                    self._ready.set()
+
+                elif event.event == EventType.SNAPSHOT:
                     for q in list(self._snapshot_subscribers):
                         if q.full():
                             with contextlib.suppress(asyncio.QueueEmpty):
