@@ -98,10 +98,15 @@ async def list_sims(
 
 
 @router.get("/{sim_id}", response_model=SimResponse)
-async def get_sim(sim_id: str) -> SimResponse:
+async def get_sim(
+    sim_id: str,
+    user: User = Depends(current_user),
+) -> SimResponse:
     sim = _sims.get(sim_id)
     if sim is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Sim not found")
+    if sim.get("user_id") != user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not your sim")
     return SimResponse(
         id=sim["id"],  # type: ignore[arg-type]
         name=sim["name"],  # type: ignore[arg-type]
