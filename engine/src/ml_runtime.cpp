@@ -31,8 +31,8 @@ FeedForwardNet load_model(const std::string& json_str) {
     static constexpr int MAX_LAYERS = 32;
 
     if (static_cast<int>(layers_json.size()) > MAX_LAYERS) {
-        throw std::runtime_error("ml_runtime: too many layers (max " +
-                                 std::to_string(MAX_LAYERS) + ")");
+        throw std::runtime_error("ml_runtime: too many layers (max " + std::to_string(MAX_LAYERS) +
+                                 ")");
     }
 
     for (const auto& lj : layers_json) {
@@ -41,8 +41,8 @@ FeedForwardNet load_model(const std::string& json_str) {
         layer.output_size = lj.at("output_size").get<int>();
         layer.activation = parse_activation(lj.value("activation", "none"));
 
-        if (layer.input_size <= 0 || layer.input_size > MAX_LAYER_SIZE ||
-            layer.output_size <= 0 || layer.output_size > MAX_LAYER_SIZE) {
+        if (layer.input_size <= 0 || layer.input_size > MAX_LAYER_SIZE || layer.output_size <= 0 ||
+            layer.output_size > MAX_LAYER_SIZE) {
             throw std::runtime_error("ml_runtime: layer size out of range (max " +
                                      std::to_string(MAX_LAYER_SIZE) + ")");
         }

@@ -51,6 +51,8 @@ include = ["app", "tests"]
 reportMissingTypeStubs = false
 reportArgumentType = false  # SQLAlchemy .where() overloads confuse pyright
 reportAssignmentType = false  # SQLModel __tablename__ typing issue
+reportCallIssue = false  # SQLAlchemy select() overloads
+reportAttributeAccessIssue = false  # SQLAlchemy expression .label() typing
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
