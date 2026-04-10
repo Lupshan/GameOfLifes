@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from httpx import AsyncClient
 
+_PASS = "StrongPass1"
+
 
 async def _signup_and_get_token(client: AsyncClient, email: str = "bot@test.com") -> str:
-    resp = await client.post("/auth/signup", json={"email": email, "password": "pass123"})
+    resp = await client.post("/auth/signup", json={"email": email, "password": _PASS})
     return resp.json()["access_token"]
 
 
@@ -64,21 +66,28 @@ async def test_get_bot_detail(client: AsyncClient) -> None:
     token = await _signup_and_get_token(client, "detail@test.com")
     create_resp = await client.post(
         "/bots",
-        json={"name": "detail_bot", "source": "fn main() { move(); }"},
+        json={"name": "detail-bot", "source": "fn main() { move(); }"},
         headers=_auth(token),
     )
     bot_id = create_resp.json()["id"]
 
-    resp = await client.get(f"/bots/{bot_id}")
+    # Now requires auth (B1 fix).
+    resp = await client.get(f"/bots/{bot_id}", headers=_auth(token))
     assert resp.status_code == 200
     assert resp.json()["source"] == "fn main() { move(); }"
+
+
+async def test_get_bot_detail_requires_auth(client: AsyncClient) -> None:
+    """B1: GET /bots/{bot_id} must require authentication."""
+    resp = await client.get("/bots/nonexistent-id")
+    assert resp.status_code == 401
 
 
 async def test_publish_bot(client: AsyncClient) -> None:
     token = await _signup_and_get_token(client, "pub@test.com")
     create_resp = await client.post(
         "/bots",
-        json={"name": "pub_bot", "source": "fn main() { move(); }"},
+        json={"name": "pub-bot", "source": "fn main() { move(); }"},
         headers=_auth(token),
     )
     bot_id = create_resp.json()["id"]
@@ -92,7 +101,7 @@ async def test_publish_uncompiled_bot_fails(client: AsyncClient) -> None:
     token = await _signup_and_get_token(client, "fail@test.com")
     create_resp = await client.post(
         "/bots",
-        json={"name": "fail_bot", "source": "invalid code @@@"},
+        json={"name": "fail-bot", "source": "invalid code @@@"},
         headers=_auth(token),
     )
     bot_id = create_resp.json()["id"]
@@ -102,5 +111,5 @@ async def test_publish_uncompiled_bot_fails(client: AsyncClient) -> None:
 
 
 async def test_create_bot_requires_auth(client: AsyncClient) -> None:
-    resp = await client.post("/bots", json={"name": "no_auth", "source": "fn main() {}"})
-    assert resp.status_code == 403
+    resp = await client.post("/bots", json={"name": "no-auth", "source": "fn main() {}"})
+    assert resp.status_code == 401

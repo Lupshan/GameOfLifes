@@ -15,7 +15,13 @@ void Vm::load(const Bytecode& bc) {
     sp_ = 0;
     call_depth_ = 0;
     halted_ = false;
-    last_error_ = VmStatus::Ok;
+    // Reject bytecode that claims more locals than the fixed-size array.
+    if (bc.local_count > VM_MAX_LOCALS) {
+        last_error_ = VmStatus::OutOfBoundsLocal;
+        halted_ = true;
+    } else {
+        last_error_ = VmStatus::Ok;
+    }
     stack_.fill(0);
     locals_.fill(0);
 }
@@ -487,6 +493,9 @@ VmStatus Vm::run(int budget) {
 }
 
 std::int32_t Vm::stack_top() const {
+    if (sp_ <= 0) {
+        return 0;
+    }
     return stack_[static_cast<std::size_t>(sp_ - 1)];
 }
 

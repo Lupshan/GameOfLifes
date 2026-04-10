@@ -44,7 +44,11 @@ async def signup(
 ) -> TokenResponse:
     result = await session.execute(select(User).where(User.email == body.email))
     if result.scalars().first() is not None:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
+        # Generic message to prevent email enumeration (B4).
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Signup failed",
+        )
 
     user = User(email=body.email, password_hash=hash_password(body.password))
     session.add(user)

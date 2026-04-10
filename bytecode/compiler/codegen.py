@@ -178,10 +178,16 @@ def generate(program: Program, sema: SemaResult) -> tuple[bytes, int]:
     # our approach emits functions in order. Forward calls need a two-pass approach.
     # For simplicity, we'll do a second pass below.)
 
+    # Bytecode size limit (64 KB) to prevent DoS via huge programs.
+    if len(emitter.code) > 65535:
+        raise CodegenError("bytecode exceeds 64 KB limit")
+
     # Calculate total local count (max across all functions — shared local space in v1).
     total_locals = 0
     for fn_info in sema.functions.values():
         total_locals = max(total_locals, fn_info.next_local)
+    if total_locals > 256:
+        raise CodegenError(f"too many local variables ({total_locals} > 256)")
 
     return bytes(emitter.code), total_locals
 
@@ -368,8 +374,13 @@ def _emit_expr(
                 em.emit_u8(callee.locals[list(callee.locals.keys())[i]])
 
             if expr.name in func_addrs:
+                addr = func_addrs[expr.name]
+                if addr > 65535:
+                    raise CodegenError(
+                        f"function '{expr.name}' at address {addr} exceeds u16 range"
+                    )
                 em.emit_u8(CALL)
-                em.emit_u16(func_addrs[expr.name])
+                em.emit_u16(addr)
             else:
                 # Forward reference — emit placeholder, patch later.
                 # For v1 simplicity, require functions to be defined before use

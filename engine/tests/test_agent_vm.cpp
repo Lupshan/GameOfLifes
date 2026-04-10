@@ -30,6 +30,7 @@ TEST_CASE("VM intrinsic: PERCEIVE pushes 4 values") {
     world.food().set(gol::Position{4, 4}, 1);
     world.terrain().set(gol::Position{4, 4}, gol::Terrain::Forest);
     world.spawn_agent(gol::Position{4, 4}, 100);
+    world.rebuild_caches();
 
     gol::AgentIntrinsicHandler handler(0, world);
 

@@ -30,10 +30,14 @@ class ParseError(Exception):
         self.col = col
 
 
+_MAX_EXPR_DEPTH = 200  # Prevent stack overflow from deeply nested expressions.
+
+
 class Parser:
     def __init__(self, tokens: list[Token]) -> None:
         self._tokens = tokens
         self._pos = 0
+        self._expr_depth = 0
 
     def _peek(self) -> Token:
         return self._tokens[self._pos]
@@ -178,7 +182,14 @@ class Parser:
     # ---- Expressions (precedence climbing) ----
 
     def _expression(self) -> Expr:
-        return self._or_expr()
+        self._expr_depth += 1
+        if self._expr_depth > _MAX_EXPR_DEPTH:
+            tok = self._peek()
+            raise ParseError("expression nesting too deep", tok.line, tok.col)
+        try:
+            return self._or_expr()
+        finally:
+            self._expr_depth -= 1
 
     def _or_expr(self) -> Expr:
         left = self._and_expr()
@@ -240,7 +251,10 @@ class Parser:
 
         if tok.kind == TokenKind.INT_LIT:
             self._advance()
-            return IntLit(int(tok.value), tok.line, tok.col)
+            val = int(tok.value)
+            if val > 2147483647 or val < -2147483648:
+                raise ParseError("integer literal out of i32 range", tok.line, tok.col)
+            return IntLit(val, tok.line, tok.col)
 
         if tok.kind == TokenKind.TRUE:
             self._advance()

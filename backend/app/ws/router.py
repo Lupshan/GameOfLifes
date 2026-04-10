@@ -14,8 +14,9 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 # In-memory subscriber list. In production, this would be managed by EngineService.
-# For now, we provide a simple pub/sub that can be wired to EngineService later.
 _subscribers: list[asyncio.Queue[dict[str, object]]] = []
+
+MAX_WS_CONNECTIONS = 200  # Global cap to prevent resource exhaustion.
 
 
 def get_subscribers() -> list[asyncio.Queue[dict[str, object]]]:
@@ -34,6 +35,11 @@ def broadcast(snapshot: dict[str, object]) -> None:
 
 @router.websocket("/ws/world")
 async def world_stream(ws: WebSocket) -> None:
+    # Reject if we've hit the connection cap.
+    if len(_subscribers) >= MAX_WS_CONNECTIONS:
+        await ws.close(code=1013)  # 1013 = Try Again Later
+        return
+
     await ws.accept()
 
     q: asyncio.Queue[dict[str, object]] = asyncio.Queue(maxsize=100)

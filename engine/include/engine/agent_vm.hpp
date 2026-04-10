@@ -15,6 +15,7 @@ class AgentIntrinsicHandler : public IntrinsicHandler {
 
     void set_agent_index(std::size_t index);
     Agent& agent();
+    bool is_valid() const;
 
     VmStatus handle_perceive(Vm& vm) override;
     VmStatus handle_look(Vm& vm) override;

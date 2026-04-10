@@ -17,13 +17,15 @@ void AgentIntrinsicHandler::set_agent_index(std::size_t index) {
     agent_index_ = index;
 }
 
+static constexpr int MAX_ENERGY = 100000;
+static constexpr int MAX_HYDRATION = 100000;
+
 Agent& AgentIntrinsicHandler::agent() {
-    if (agent_index_ >= world_.agents().size()) {
-        // Index became stale (e.g., agents reaped mid-tick). Fall back to first alive agent.
-        // This should not happen in normal flow but prevents UB.
-        agent_index_ = 0;
-    }
     return world_.agents()[agent_index_];
+}
+
+bool AgentIntrinsicHandler::is_valid() const {
+    return agent_index_ < world_.agents().size();
 }
 
 VmStatus AgentIntrinsicHandler::handle_perceive(Vm& vm) {
@@ -97,7 +99,7 @@ VmStatus AgentIntrinsicHandler::handle_eat(Vm& vm) {
     int gained = 0;
     if (food_cell > 0) {
         gained = food_cell * traits.forage_efficiency;
-        a.energy += gained;
+        a.energy = std::min(a.energy + gained, MAX_ENERGY);
         food_cell = 0;
     }
     vm.push(gained);
@@ -111,7 +113,7 @@ VmStatus AgentIntrinsicHandler::handle_drink(Vm& vm) {
     int gained = 0;
     if (water_cell > 0) {
         gained = water_cell * traits.forage_efficiency;
-        a.hydration += gained;
+        a.hydration = std::min(a.hydration + gained, MAX_HYDRATION);
         water_cell = 0;
     }
     vm.push(gained);

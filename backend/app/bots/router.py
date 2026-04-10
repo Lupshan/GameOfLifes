@@ -87,11 +87,14 @@ async def list_bots(
 @router.get("/{bot_id}", response_model=BotDetailResponse)
 async def get_bot_detail(
     bot_id: str,
+    user: User = Depends(current_user),
     session: AsyncSession = Depends(get_session),
 ) -> BotDetailResponse:
     bot = await get_bot(bot_id, session)
     if bot is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Bot not found")
+    if bot.user_id != user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not your bot")
     version = await get_latest_version(bot_id, session)
     source = version.source if version else ""
     compile_ok = version.compile_ok if version else False

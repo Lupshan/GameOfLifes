@@ -7,6 +7,9 @@ from httpx import AsyncClient
 from app.auth.service import create_token, decode_token, hash_password, verify_password
 from app.config import Settings
 
+# Strong password that meets the new validation rules (10+ chars, 1 digit, 1 uppercase).
+_PASS = "StrongPass1"
+
 # ---- service unit tests ----
 
 
@@ -39,7 +42,7 @@ def test_decode_wrong_secret() -> None:
 
 
 async def test_signup_happy_path(client: AsyncClient) -> None:
-    resp = await client.post("/auth/signup", json={"email": "new@test.com", "password": "pass123"})
+    resp = await client.post("/auth/signup", json={"email": "new@test.com", "password": _PASS})
     assert resp.status_code == 201
     data = resp.json()
     assert "access_token" in data
@@ -47,31 +50,34 @@ async def test_signup_happy_path(client: AsyncClient) -> None:
 
 
 async def test_signup_duplicate_email(client: AsyncClient) -> None:
-    await client.post("/auth/signup", json={"email": "dup@test.com", "password": "pass123"})
-    resp = await client.post("/auth/signup", json={"email": "dup@test.com", "password": "pass456"})
-    assert resp.status_code == 409
+    await client.post("/auth/signup", json={"email": "dup@test.com", "password": _PASS})
+    resp = await client.post("/auth/signup", json={"email": "dup@test.com", "password": _PASS})
+    # Generic error to prevent email enumeration (B4).
+    assert resp.status_code == 400
 
 
 async def test_login_happy_path(client: AsyncClient) -> None:
-    await client.post("/auth/signup", json={"email": "login@test.com", "password": "pass123"})
-    resp = await client.post("/auth/login", json={"email": "login@test.com", "password": "pass123"})
+    await client.post("/auth/signup", json={"email": "login@test.com", "password": _PASS})
+    resp = await client.post("/auth/login", json={"email": "login@test.com", "password": _PASS})
     assert resp.status_code == 200
     assert "access_token" in resp.json()
 
 
 async def test_login_wrong_password(client: AsyncClient) -> None:
-    await client.post("/auth/signup", json={"email": "wrong@test.com", "password": "pass123"})
-    resp = await client.post("/auth/login", json={"email": "wrong@test.com", "password": "bad"})
+    await client.post("/auth/signup", json={"email": "wrong@test.com", "password": _PASS})
+    resp = await client.post(
+        "/auth/login", json={"email": "wrong@test.com", "password": "badpassword"}
+    )
     assert resp.status_code == 401
 
 
 async def test_login_unknown_email(client: AsyncClient) -> None:
-    resp = await client.post("/auth/login", json={"email": "no@test.com", "password": "pass"})
+    resp = await client.post("/auth/login", json={"email": "no@test.com", "password": _PASS})
     assert resp.status_code == 401
 
 
 async def test_me_with_valid_token(client: AsyncClient) -> None:
-    resp = await client.post("/auth/signup", json={"email": "me@test.com", "password": "pass123"})
+    resp = await client.post("/auth/signup", json={"email": "me@test.com", "password": _PASS})
     token = resp.json()["access_token"]
 
     resp = await client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
@@ -81,7 +87,7 @@ async def test_me_with_valid_token(client: AsyncClient) -> None:
 
 async def test_me_without_token(client: AsyncClient) -> None:
     resp = await client.get("/auth/me")
-    assert resp.status_code == 403  # HTTPBearer returns 403 if no credentials
+    assert resp.status_code == 401
 
 
 async def test_me_with_invalid_token(client: AsyncClient) -> None:
