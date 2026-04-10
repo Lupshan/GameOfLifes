@@ -12,11 +12,9 @@
 
 	let camera: Camera = { x: 0, y: 0, zoom: 8 };
 
-	// WS reconnection state.
 	let retryDelay = 1000;
 	let retryCount = 0;
 
-	// Pan state.
 	let dragging = false;
 	let dragStartX = 0;
 	let dragStartY = 0;
@@ -44,7 +42,6 @@
 		};
 
 		ws.onclose = () => {
-			// Exponential backoff with jitter (max 30s, max 10 retries).
 			if (retryCount < 10) {
 				const jitter = Math.random() * 500;
 				setTimeout(connectWS, retryDelay + jitter);
@@ -69,10 +66,10 @@
 			renderHUD(ctx, latestSnapshot, canvas.width);
 		} else {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.fillStyle = '#333';
+			ctx.fillStyle = '#0b0f19';
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
-			ctx.fillStyle = '#aaa';
-			ctx.font = '20px monospace';
+			ctx.fillStyle = '#64748b';
+			ctx.font = '16px Inter, system-ui, sans-serif';
 			ctx.fillText('Connecting to world...', 20, 40);
 		}
 
@@ -123,10 +120,26 @@
 
 <canvas
 	bind:this={canvas}
-	style="position:fixed;top:0;left:0;width:100vw;height:100vh;cursor:grab;"
+	class="world-canvas"
 	onmousedown={onMouseDown}
 	onmousemove={onMouseMove}
 	onmouseup={onMouseUp}
 	onmouseleave={onMouseUp}
 	onwheel={onWheel}
 ></canvas>
+
+<style>
+	.world-canvas {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		cursor: grab;
+		z-index: 50;
+	}
+
+	.world-canvas:active {
+		cursor: grabbing;
+	}
+</style>

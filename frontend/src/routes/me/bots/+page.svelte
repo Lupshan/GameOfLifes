@@ -15,7 +15,7 @@
 	let loading = $state(true);
 
 	onMount(async () => {
-		if (!$auth.token) {
+		if (!$auth.loggedIn) {
 			goto('/login');
 			return;
 		}
@@ -31,37 +31,77 @@
 	<title>My Bots - GameOfLifes</title>
 </svelte:head>
 
-<div style="max-width:800px;margin:2rem auto;padding:1rem;">
-	<h1>My Bots</h1>
+<div class="container">
+	<div class="page-header">
+		<h1>My Bots</h1>
+		<a href="/edit" class="btn btn-primary">+ New Bot</a>
+	</div>
 
 	{#if loading}
-		<p>Loading...</p>
+		<p class="loading">Loading your bots...</p>
 	{:else if bots.length === 0}
-		<p>No bots yet. <a href="/edit">Create one</a></p>
+		<div class="empty-state card">
+			<p>You haven't created any bots yet.</p>
+			<a href="/edit" class="btn btn-primary">Create your first bot</a>
+		</div>
 	{:else}
-		<table style="width:100%;border-collapse:collapse;">
-			<thead>
-				<tr style="text-align:left;border-bottom:2px solid #ccc;">
-					<th style="padding:0.5rem;">Name</th>
-					<th style="padding:0.5rem;">Compiled</th>
-					<th style="padding:0.5rem;">Published</th>
-					<th style="padding:0.5rem;">Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each bots as bot}
-					<tr style="border-bottom:1px solid #eee;">
-						<td style="padding:0.5rem;">{bot.name}</td>
-						<td style="padding:0.5rem;">{bot.compile_ok ? '✓' : '✗'}</td>
-						<td style="padding:0.5rem;">{bot.published ? '✓' : '—'}</td>
-						<td style="padding:0.5rem;">
-							<a href="/me/bots/{bot.id}">View</a>
-						</td>
+		<div class="card">
+			<table>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Compiled</th>
+						<th>Published</th>
+						<th>Actions</th>
 					</tr>
-				{/each}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{#each bots as bot}
+						<tr>
+							<td><strong>{bot.name}</strong></td>
+							<td>
+								<span
+									class="badge"
+									class:badge-success={bot.compile_ok}
+									class:badge-danger={!bot.compile_ok}
+								>
+									{bot.compile_ok ? 'OK' : 'Error'}
+								</span>
+							</td>
+							<td>
+								<span class="badge" class:badge-success={bot.published}>
+									{bot.published ? 'Live' : 'Draft'}
+								</span>
+							</td>
+							<td>
+								<a href="/me/bots/{bot.id}" class="btn btn-ghost">View</a>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
 	{/if}
-
-	<p style="margin-top:1rem;"><a href="/edit">+ New Bot</a></p>
 </div>
+
+<style>
+	.page-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: var(--sp-6);
+	}
+
+	.page-header h1 {
+		margin-bottom: 0;
+	}
+
+	.empty-state {
+		text-align: center;
+		padding: var(--sp-12);
+	}
+
+	.empty-state p {
+		margin-bottom: var(--sp-4);
+	}
+</style>

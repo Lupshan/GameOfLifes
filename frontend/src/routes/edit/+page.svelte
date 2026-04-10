@@ -7,6 +7,7 @@
 
 	onMount(async () => {
 		const BlocklyLib = await import('blockly');
+		type WorkspaceSvg = InstanceType<typeof BlocklyLib.WorkspaceSvg>;
 		const { registerBlocks, TOOLBOX_XML } = await import('$lib/blocks/definitions');
 		const { createGenerator } = await import('$lib/blocks/generator');
 
@@ -20,37 +21,34 @@
 			trashcan: true
 		});
 
-		// Add default main block.
-		const mainBlock = (workspace as BlocklyLib.WorkspaceSvg).newBlock('gol_main');
+		const ws = workspace as WorkspaceSvg;
+
+		const mainBlock = ws.newBlock('gol_main');
 		mainBlock.initSvg();
 		mainBlock.render();
 		mainBlock.moveBy(20, 20);
 
-		// Restore saved workspace.
 		const saved = localStorage.getItem('gol_workspace');
 		if (saved) {
 			try {
-				BlocklyLib.serialization.workspaces.load(JSON.parse(saved), workspace as BlocklyLib.WorkspaceSvg);
+				BlocklyLib.serialization.workspaces.load(JSON.parse(saved), ws);
 			} catch {
 				// Ignore restore errors.
 			}
 		}
 
-		// Generate code on change.
-		(workspace as BlocklyLib.WorkspaceSvg).addChangeListener(() => {
+		ws.addChangeListener(() => {
 			try {
-				generatedSource = generator.workspaceToCode(workspace as BlocklyLib.WorkspaceSvg);
+				generatedSource = generator.workspaceToCode(workspace as WorkspaceSvg);
 			} catch {
 				generatedSource = '// Error generating code';
 			}
 
-			// Auto-save workspace.
-			const state = BlocklyLib.serialization.workspaces.save(workspace as BlocklyLib.WorkspaceSvg);
+			const state = BlocklyLib.serialization.workspaces.save(workspace as WorkspaceSvg);
 			localStorage.setItem('gol_workspace', JSON.stringify(state));
 		});
 
-		// Trigger initial generation.
-		generatedSource = generator.workspaceToCode(workspace as BlocklyLib.WorkspaceSvg);
+		generatedSource = generator.workspaceToCode(ws);
 	});
 
 	onDestroy(() => {
@@ -93,46 +91,113 @@
 	<title>Editor - GameOfLifes</title>
 </svelte:head>
 
-<div style="display:flex;height:calc(100vh - 50px);">
-	<div bind:this={blocklyDiv} style="flex:0.7;height:100%;"></div>
-	<div style="flex:0.3;padding:1rem;overflow-y:auto;background:#1e1e1e;color:#d4d4d4;">
-		<h3 style="margin-top:0;">Generated Source</h3>
-		<pre style="white-space:pre-wrap;font-size:13px;line-height:1.5;">{generatedSource}</pre>
+<div class="editor-layout">
+	<div bind:this={blocklyDiv} class="blockly-pane"></div>
 
-		<hr style="border-color:#444;margin:1rem 0;" />
+	<div class="source-pane">
+		<h3>Generated Source</h3>
+		<pre class="source-code">{generatedSource}</pre>
 
-		{#if !showSubmit}
-			<button onclick={() => showSubmit = true}
-				style="padding:0.5rem 1rem;cursor:pointer;background:#4caf50;color:#fff;border:none;">
-				Submit Bot
-			</button>
-		{:else}
-			<div>
-				<label for="bot-name" style="display:block;margin-bottom:0.25rem;">Bot name:</label>
-				<input id="bot-name" type="text" bind:value={botName}
-					style="width:100%;padding:0.5rem;margin-bottom:0.5rem;" />
-				<button onclick={handleSubmit} disabled={submitting || !botName.trim()}
-					style="padding:0.5rem 1rem;cursor:pointer;background:#4caf50;color:#fff;border:none;">
-					{submitting ? 'Submitting...' : 'Submit'}
+		<div class="submit-section">
+			{#if !showSubmit}
+				<button class="btn-primary submit-toggle" onclick={() => (showSubmit = true)}>
+					Submit Bot
 				</button>
-				<button onclick={() => showSubmit = false}
-					style="padding:0.5rem 1rem;cursor:pointer;margin-left:0.5rem;">
-					Cancel
-				</button>
-			</div>
-		{/if}
+			{:else}
+				<div class="submit-form">
+					<label for="bot-name">Bot name</label>
+					<input id="bot-name" type="text" bind:value={botName} placeholder="my-clever-bot" />
+					<div class="submit-actions">
+						<button
+							class="btn-primary"
+							onclick={handleSubmit}
+							disabled={submitting || !botName.trim()}
+						>
+							{submitting ? 'Submitting...' : 'Submit'}
+						</button>
+						<button onclick={() => (showSubmit = false)}> Cancel </button>
+					</div>
+				</div>
+			{/if}
 
-		{#if submitError}
-			<p style="color:#f44336;margin-top:0.5rem;">{submitError}</p>
-		{/if}
+			{#if submitError}
+				<p class="error-text">{submitError}</p>
+			{/if}
 
-		{#if compileErrors.length > 0}
-			<div style="margin-top:0.5rem;color:#f44336;">
-				<strong>Compile errors:</strong>
-				{#each compileErrors as err}
-					<p style="margin:0.25rem 0;">[{err.line}:{err.col}] {err.message}</p>
-				{/each}
-			</div>
-		{/if}
+			{#if compileErrors.length > 0}
+				<div class="compile-errors">
+					<strong>Compile errors:</strong>
+					{#each compileErrors as err}
+						<div class="compile-error">[{err.line}:{err.col}] {err.message}</div>
+					{/each}
+				</div>
+			{/if}
+		</div>
 	</div>
 </div>
+
+<style>
+	.editor-layout {
+		display: flex;
+		height: calc(100vh - var(--nav-height));
+	}
+
+	.blockly-pane {
+		flex: 0.7;
+		height: 100%;
+	}
+
+	.source-pane {
+		flex: 0.3;
+		padding: var(--sp-4);
+		overflow-y: auto;
+		background: var(--bg-surface);
+		border-left: 1px solid var(--border);
+	}
+
+	.source-pane h3 {
+		font-size: var(--text-sm);
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--text-muted);
+		margin-bottom: var(--sp-3);
+	}
+
+	.source-code {
+		white-space: pre-wrap;
+		font-size: var(--text-sm);
+		line-height: 1.6;
+		margin-bottom: var(--sp-6);
+	}
+
+	.submit-section {
+		border-top: 1px solid var(--border);
+		padding-top: var(--sp-4);
+	}
+
+	.submit-toggle {
+		width: 100%;
+	}
+
+	.submit-form {
+		display: flex;
+		flex-direction: column;
+		gap: var(--sp-3);
+	}
+
+	.submit-actions {
+		display: flex;
+		gap: var(--sp-2);
+	}
+
+	.compile-errors {
+		margin-top: var(--sp-3);
+		font-size: var(--text-sm);
+		color: var(--danger);
+	}
+
+	.compile-error {
+		font-family: var(--font-mono);
+		padding: var(--sp-1) 0;
+	}
+</style>

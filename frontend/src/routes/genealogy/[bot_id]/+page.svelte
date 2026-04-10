@@ -23,7 +23,6 @@
 		loading = false;
 	});
 
-	// Build tree: parent → children.
 	let births = $derived(events.filter((e) => e.event_type === 'birth'));
 	let tree = $derived(() => {
 		const map = new Map<number, LineageEvent[]>();
@@ -37,9 +36,11 @@
 		return map;
 	});
 
-	// Find root agents (no parent in our data).
 	let roots = $derived(
-		births.filter((b) => b.parent_agent_id == null || !births.some((p) => p.agent_id === b.parent_agent_id))
+		births
+			.filter(
+				(b) => b.parent_agent_id == null || !births.some((p) => p.agent_id === b.parent_agent_id)
+			)
 			.slice(0, 20)
 	);
 </script>
@@ -48,24 +49,33 @@
 	<title>Genealogy - GameOfLifes</title>
 </svelte:head>
 
-<div style="max-width:800px;margin:2rem auto;padding:1rem;">
+<div class="container">
 	<h1>Genealogy</h1>
-	<p>Bot: {page.params.bot_id}</p>
+	<p class="bot-id">Bot: <code>{page.params.bot_id}</code></p>
 
 	{#if loading}
-		<p>Loading...</p>
+		<p class="loading">Loading lineage data...</p>
 	{:else if births.length === 0}
-		<p>No lineage data yet.</p>
+		<div class="card empty-state">
+			<p>No lineage data yet for this bot.</p>
+		</div>
 	{:else}
-		<p>{births.length} birth events found.</p>
+		<p class="event-count">{births.length} birth events found</p>
 
-		<div style="font-family:monospace;font-size:13px;">
+		<div class="card tree-card">
 			{#each roots as root}
-				<div style="margin-bottom:0.5rem;">
-					<span>Agent #{root.agent_id} (gen {root.generation ?? 0}, tick {root.tick})</span>
+				<div class="tree-node">
+					<div class="agent-line">
+						<span class="agent-id">Agent #{root.agent_id}</span>
+						<span class="badge">Gen {root.generation ?? 0}</span>
+						<span class="tick-label">tick {root.tick}</span>
+					</div>
 					{#each tree().get(root.agent_id) ?? [] as child}
-						<div style="margin-left:2rem;">
-							└─ Agent #{child.agent_id} (gen {child.generation ?? 0}, tick {child.tick})
+						<div class="child-node">
+							<span class="tree-branch"></span>
+							<span class="agent-id">Agent #{child.agent_id}</span>
+							<span class="badge">Gen {child.generation ?? 0}</span>
+							<span class="tick-label">tick {child.tick}</span>
 						</div>
 					{/each}
 				</div>
@@ -73,5 +83,76 @@
 		</div>
 	{/if}
 
-	<p style="margin-top:2rem;"><a href="/stats">← Stats</a></p>
+	<a href="/stats" class="back-link">&larr; Stats</a>
 </div>
+
+<style>
+	.bot-id {
+		color: var(--text-muted);
+		margin-bottom: var(--sp-4);
+	}
+
+	.event-count {
+		font-size: var(--text-sm);
+		color: var(--text-secondary);
+		margin-bottom: var(--sp-4);
+	}
+
+	.tree-card {
+		font-family: var(--font-mono);
+		font-size: var(--text-sm);
+	}
+
+	.tree-node {
+		padding: var(--sp-3) 0;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.tree-node:last-child {
+		border-bottom: none;
+	}
+
+	.agent-line {
+		display: flex;
+		align-items: center;
+		gap: var(--sp-2);
+	}
+
+	.agent-id {
+		font-weight: 600;
+		color: var(--text-primary);
+	}
+
+	.tick-label {
+		font-size: var(--text-xs);
+		color: var(--text-muted);
+		margin-left: auto;
+	}
+
+	.child-node {
+		display: flex;
+		align-items: center;
+		gap: var(--sp-2);
+		padding: var(--sp-1) 0;
+		margin-left: var(--sp-6);
+	}
+
+	.tree-branch {
+		color: var(--text-muted);
+	}
+
+	.tree-branch::before {
+		content: '\2514\2500';
+	}
+
+	.empty-state {
+		text-align: center;
+		padding: var(--sp-12);
+	}
+
+	.back-link {
+		display: inline-block;
+		margin-top: var(--sp-6);
+		font-size: var(--text-sm);
+	}
+</style>

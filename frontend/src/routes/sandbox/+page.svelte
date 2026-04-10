@@ -18,7 +18,7 @@
 	let creating = $state(false);
 
 	onMount(async () => {
-		if (!$auth.token) {
+		if (!$auth.loggedIn) {
 			goto('/login');
 			return;
 		}
@@ -58,45 +58,70 @@
 	<title>Sandbox - GameOfLifes</title>
 </svelte:head>
 
-<div style="max-width:800px;margin:2rem auto;padding:1rem;">
-	<h1>Sandbox — Private Simulations</h1>
+<div class="container">
+	<h1>Sandbox</h1>
+	<p>Private simulations for testing your bots in isolation.</p>
 
-	<div style="margin-bottom:1rem;display:flex;gap:0.5rem;">
-		<input type="text" bind:value={simName} placeholder="Simulation name"
-			style="flex:1;padding:0.5rem;" />
-		<button onclick={createSim} disabled={creating || !simName.trim()}
-			style="padding:0.5rem 1rem;cursor:pointer;">
-			{creating ? 'Creating...' : 'New Sim'}
+	<div class="create-bar card">
+		<input type="text" bind:value={simName} placeholder="Simulation name" />
+		<button class="btn-primary" onclick={createSim} disabled={creating || !simName.trim()}>
+			{creating ? 'Creating...' : 'New Simulation'}
 		</button>
 	</div>
 
 	{#if loading}
-		<p>Loading...</p>
+		<p class="loading">Loading simulations...</p>
 	{:else if sims.length === 0}
-		<p>No private simulations. Create one above.</p>
+		<div class="card empty-state">
+			<p>No private simulations. Create one above to start testing.</p>
+		</div>
 	{:else}
-		<table style="width:100%;border-collapse:collapse;">
-			<thead>
-				<tr style="text-align:left;border-bottom:2px solid #ccc;">
-					<th style="padding:0.5rem;">Name</th>
-					<th style="padding:0.5rem;">Status</th>
-					<th style="padding:0.5rem;">Max Ticks</th>
-					<th style="padding:0.5rem;">Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each sims as sim}
-					<tr style="border-bottom:1px solid #eee;">
-						<td style="padding:0.5rem;">{sim.name}</td>
-						<td style="padding:0.5rem;">{sim.status}</td>
-						<td style="padding:0.5rem;">{sim.max_ticks}</td>
-						<td style="padding:0.5rem;">
-							<button onclick={() => deleteSim(sim.id)}
-								style="cursor:pointer;color:red;background:none;border:none;">Delete</button>
-						</td>
+		<div class="card">
+			<table>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Status</th>
+						<th>Max Ticks</th>
+						<th>Actions</th>
 					</tr>
-				{/each}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{#each sims as sim}
+						<tr>
+							<td><strong>{sim.name}</strong></td>
+							<td><span class="badge">{sim.status}</span></td>
+							<td>{sim.max_ticks}</td>
+							<td>
+								<button class="btn-danger btn-sm" onclick={() => deleteSim(sim.id)}>Delete</button>
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
 	{/if}
 </div>
+
+<style>
+	.create-bar {
+		display: flex;
+		gap: var(--sp-3);
+		align-items: center;
+		margin-bottom: var(--sp-6);
+	}
+
+	.create-bar input {
+		flex: 1;
+	}
+
+	.btn-sm {
+		padding: var(--sp-1) var(--sp-3);
+		font-size: var(--text-xs);
+	}
+
+	.empty-state {
+		text-align: center;
+		padding: var(--sp-8);
+	}
+</style>

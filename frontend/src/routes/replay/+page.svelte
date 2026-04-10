@@ -17,7 +17,6 @@
 	let loading = $state(true);
 	let intervalId: ReturnType<typeof setInterval> | null = null;
 
-	// Cache of fetched snapshots.
 	const cache = new Map<string, Snapshot>();
 
 	onMount(async () => {
@@ -52,7 +51,6 @@
 			}
 		}
 
-		// Prefetch next 10.
 		for (let i = index + 1; i < Math.min(index + 11, snapshots.length); i++) {
 			const m = snapshots[i];
 			if (!cache.has(m.id)) {
@@ -108,20 +106,19 @@
 	<title>Replay - GameOfLifes</title>
 </svelte:head>
 
-<div style="display:flex;flex-direction:column;height:calc(100vh - 50px);">
-	<div style="flex:1;position:relative;">
+<div class="replay-layout">
+	<div class="canvas-area">
 		<WorldCanvas snapshot={currentSnapshot} />
 	</div>
 
-	<div style="padding:0.5rem 1rem;background:#222;color:#ddd;display:flex;align-items:center;gap:1rem;">
+	<div class="controls">
 		{#if loading}
-			<span>Loading snapshots...</span>
+			<span class="controls-text">Loading snapshots...</span>
 		{:else if snapshots.length === 0}
-			<span>No snapshots available.</span>
+			<span class="controls-text">No snapshots available.</span>
 		{:else}
-			<button onclick={togglePlay}
-				style="padding:0.25rem 0.75rem;cursor:pointer;">
-				{playing ? '⏸' : '▶'}
+			<button class="play-btn" onclick={togglePlay}>
+				{playing ? '\u23F8' : '\u25B6'}
 			</button>
 
 			<input
@@ -130,18 +127,16 @@
 				max={snapshots.length - 1}
 				value={currentIndex}
 				oninput={onScrub}
-				style="flex:1;"
+				class="scrubber"
 			/>
 
-			<span style="font-size:13px;min-width:120px;">
-				Tick {snapshots[currentIndex]?.tick ?? '—'} ({currentIndex + 1}/{snapshots.length})
+			<span class="tick-info">
+				Tick {snapshots[currentIndex]?.tick ?? '\u2014'} ({currentIndex + 1}/{snapshots.length})
 			</span>
 
-			<div style="display:flex;gap:0.25rem;">
+			<div class="speed-group">
 				{#each [1, 2, 4, 8] as s}
-					<button
-						onclick={() => setSpeed(s)}
-						style="padding:0.2rem 0.5rem;cursor:pointer;background:{speed === s ? '#4caf50' : '#444'};color:#fff;border:none;">
+					<button class="speed-btn" class:speed-active={speed === s} onclick={() => setSpeed(s)}>
 						{s}x
 					</button>
 				{/each}
@@ -149,3 +144,88 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	.replay-layout {
+		display: flex;
+		flex-direction: column;
+		height: calc(100vh - var(--nav-height));
+	}
+
+	.canvas-area {
+		flex: 1;
+		position: relative;
+		background: var(--bg-base);
+	}
+
+	.controls {
+		display: flex;
+		align-items: center;
+		gap: var(--sp-3);
+		padding: var(--sp-3) var(--sp-4);
+		background: var(--bg-surface);
+		border-top: 1px solid var(--border);
+	}
+
+	.controls-text {
+		font-size: var(--text-sm);
+		color: var(--text-muted);
+	}
+
+	.play-btn {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		font-size: var(--text-lg);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		background: var(--accent);
+		border-color: var(--accent);
+		color: #fff;
+	}
+
+	.play-btn:hover {
+		background: var(--accent-hover);
+		border-color: var(--accent-hover);
+	}
+
+	.scrubber {
+		flex: 1;
+	}
+
+	.tick-info {
+		font-size: var(--text-xs);
+		font-family: var(--font-mono);
+		color: var(--text-secondary);
+		min-width: 140px;
+		text-align: right;
+		flex-shrink: 0;
+	}
+
+	.speed-group {
+		display: flex;
+		gap: var(--sp-1);
+		flex-shrink: 0;
+	}
+
+	.speed-btn {
+		padding: var(--sp-1) var(--sp-2);
+		font-size: var(--text-xs);
+		font-weight: 600;
+		border-radius: var(--radius-sm);
+	}
+
+	.speed-active {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: #fff;
+	}
+
+	@media (max-width: 768px) {
+		.tick-info {
+			display: none;
+		}
+	}
+</style>

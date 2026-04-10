@@ -10,7 +10,11 @@
 		data: DataPoint[];
 	}
 
-	let { series, width = 600, height = 300 }: { series: Series[]; width?: number; height?: number } = $props();
+	let {
+		series,
+		width = 600,
+		height = 300
+	}: { series: Series[]; width?: number; height?: number } = $props();
 
 	const padding = { top: 20, right: 20, bottom: 30, left: 50 };
 
@@ -35,19 +39,33 @@
 	let yMax = $derived(Math.max(...allPoints.map((p) => p.y), 1));
 </script>
 
-<svg {width} {height} style="background:#fafafa;border:1px solid #ddd;">
+<svg {width} {height} class="chart">
 	<!-- Y axis -->
-	<line x1={padding.left} y1={padding.top} x2={padding.left} y2={height - padding.bottom} stroke="#999" />
+	<line
+		x1={padding.left}
+		y1={padding.top}
+		x2={padding.left}
+		y2={height - padding.bottom}
+		stroke="#334155"
+	/>
 	<!-- X axis -->
-	<line x1={padding.left} y1={height - padding.bottom} x2={width - padding.right} y2={height - padding.bottom} stroke="#999" />
+	<line
+		x1={padding.left}
+		y1={height - padding.bottom}
+		x2={width - padding.right}
+		y2={height - padding.bottom}
+		stroke="#334155"
+	/>
 
 	<!-- Y label -->
-	<text x={10} y={padding.top + 5} font-size="11" fill="#666">{yMax}</text>
-	<text x={10} y={height - padding.bottom} font-size="11" fill="#666">0</text>
+	<text x={10} y={padding.top + 5} font-size="11" fill="#64748b">{yMax}</text>
+	<text x={10} y={height - padding.bottom} font-size="11" fill="#64748b">0</text>
 
 	<!-- X labels -->
-	<text x={padding.left} y={height - 5} font-size="11" fill="#666">{xMin}</text>
-	<text x={width - padding.right} y={height - 5} font-size="11" fill="#666" text-anchor="end">{xMax}</text>
+	<text x={padding.left} y={height - 5} font-size="11" fill="#64748b">{xMin}</text>
+	<text x={width - padding.right} y={height - 5} font-size="11" fill="#64748b" text-anchor="end"
+		>{xMax}</text
+	>
 
 	<!-- Series -->
 	{#each series as s}
@@ -56,7 +74,15 @@
 
 	<!-- Legend -->
 	{#each series as s, i}
-		<rect x={padding.left + i * 100} y={2} width={12} height={12} fill={s.color} />
-		<text x={padding.left + i * 100 + 16} y={12} font-size="11" fill="#333">{s.label}</text>
+		<rect x={padding.left + i * 100} y={2} width={12} height={12} fill={s.color} rx="2" />
+		<text x={padding.left + i * 100 + 16} y={12} font-size="11" fill="#94a3b8">{s.label}</text>
 	{/each}
 </svg>
+
+<style>
+	.chart {
+		background: var(--bg-raised);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+	}
+</style>

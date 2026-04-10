@@ -19,7 +19,7 @@
 
 	onMount(async () => {
 		try {
-			bot = await getBot(page.params.id);
+			bot = await getBot(page.params.id!);
 		} catch {
 			bot = null;
 		}
@@ -45,45 +45,146 @@
 	<title>{bot?.name ?? 'Bot'} - GameOfLifes</title>
 </svelte:head>
 
-<div style="max-width:800px;margin:2rem auto;padding:1rem;">
+<div class="container">
 	{#if loading}
-		<p>Loading...</p>
+		<p class="loading">Loading bot...</p>
 	{:else if !bot}
-		<p>Bot not found.</p>
+		<div class="card empty-state">
+			<p>Bot not found.</p>
+			<a href="/me/bots" class="btn">Back to My Bots</a>
+		</div>
 	{:else}
-		<h1>{bot.name}</h1>
-
-		<div style="display:flex;gap:1rem;margin-bottom:1rem;">
-			<span>Compiled: {bot.compile_ok ? '✓' : '✗'}</span>
-			<span>Published: {bot.published ? '✓' : '—'}</span>
+		<div class="page-header">
+			<div>
+				<h1>{bot.name}</h1>
+				<div class="status-row">
+					<span
+						class="badge"
+						class:badge-success={bot.compile_ok}
+						class:badge-danger={!bot.compile_ok}
+					>
+						{bot.compile_ok ? 'Compiled' : 'Compile error'}
+					</span>
+					<span class="badge" class:badge-success={bot.published}>
+						{bot.published ? 'Published' : 'Draft'}
+					</span>
+				</div>
+			</div>
 		</div>
 
 		{#if bot.compile_ok && !bot.published}
-			<button onclick={handlePublish} disabled={publishing}
-				style="padding:0.5rem 1rem;background:#4caf50;color:#fff;border:none;cursor:pointer;margin-bottom:1rem;">
-				{publishing ? 'Publishing...' : 'Publish to World'}
-			</button>
-			{#if publishError}
-				<p style="color:red;">{publishError}</p>
-			{/if}
+			<div class="publish-bar">
+				<button onclick={handlePublish} disabled={publishing} class="btn-primary">
+					{publishing ? 'Publishing...' : 'Publish to World'}
+				</button>
+				{#if publishError}
+					<p class="error-text">{publishError}</p>
+				{/if}
+			</div>
 		{/if}
 
 		{#if bot.published}
-			<p style="color:#4caf50;">Published! <a href="/world">View in World</a></p>
+			<div class="published-banner">
+				Published and live! <a href="/world">View in World</a>
+			</div>
 		{/if}
 
 		{#if bot.compile_errors && bot.compile_errors.length > 0}
-			<div style="margin-bottom:1rem;color:red;">
-				<strong>Compile errors:</strong>
+			<div class="errors-card card">
+				<h3>Compile Errors</h3>
 				{#each bot.compile_errors as err}
-					<p>[{err.line}:{err.col}] {err.message}</p>
+					<div class="error-line">
+						<span class="error-loc">{err.line}:{err.col}</span>
+						<span>{err.message}</span>
+					</div>
 				{/each}
 			</div>
 		{/if}
 
-		<h3>Source</h3>
-		<pre style="background:#1e1e1e;color:#d4d4d4;padding:1rem;overflow-x:auto;">{bot.source}</pre>
+		<div class="source-section card">
+			<h3>Source</h3>
+			<pre>{bot.source}</pre>
+		</div>
 
-		<p style="margin-top:1rem;"><a href="/me/bots">← Back to My Bots</a></p>
+		<a href="/me/bots" class="back-link">&larr; Back to My Bots</a>
 	{/if}
 </div>
+
+<style>
+	.page-header {
+		margin-bottom: var(--sp-6);
+	}
+
+	.page-header h1 {
+		margin-bottom: var(--sp-2);
+	}
+
+	.status-row {
+		display: flex;
+		gap: var(--sp-2);
+	}
+
+	.publish-bar {
+		margin-bottom: var(--sp-4);
+	}
+
+	.published-banner {
+		background: var(--accent-glow);
+		color: var(--accent);
+		border: 1px solid var(--accent);
+		border-radius: var(--radius);
+		padding: var(--sp-3) var(--sp-4);
+		margin-bottom: var(--sp-4);
+		font-weight: 500;
+	}
+
+	.published-banner a {
+		color: var(--accent);
+		text-decoration: underline;
+	}
+
+	.errors-card {
+		border-color: var(--danger);
+		margin-bottom: var(--sp-4);
+	}
+
+	.errors-card h3 {
+		color: var(--danger);
+	}
+
+	.error-line {
+		padding: var(--sp-2) 0;
+		border-bottom: 1px solid var(--border);
+		font-size: var(--text-sm);
+		color: var(--danger);
+	}
+
+	.error-line:last-child {
+		border-bottom: none;
+	}
+
+	.error-loc {
+		font-family: var(--font-mono);
+		font-weight: 600;
+		margin-right: var(--sp-3);
+		color: var(--text-muted);
+	}
+
+	.source-section {
+		margin-bottom: var(--sp-6);
+	}
+
+	.source-section pre {
+		margin-top: var(--sp-3);
+		margin-bottom: 0;
+	}
+
+	.back-link {
+		font-size: var(--text-sm);
+	}
+
+	.empty-state {
+		text-align: center;
+		padding: var(--sp-12);
+	}
+</style>
