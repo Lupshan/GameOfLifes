@@ -29,7 +29,7 @@ function createAuthStore() {
 				body: JSON.stringify({ email, password })
 			});
 			if (!resp.ok) {
-				const err = await resp.json();
+				const err = await resp.json().catch(() => ({}));
 				throw new Error(err.detail || 'Signup failed');
 			}
 			// Token is set as httpOnly cookie by the backend response.
@@ -42,7 +42,7 @@ function createAuthStore() {
 				body: JSON.stringify({ email, password })
 			});
 			if (!resp.ok) {
-				const err = await resp.json();
+				const err = await resp.json().catch(() => ({}));
 				throw new Error(err.detail || 'Login failed');
 			}
 			// Token is set as httpOnly cookie by the backend response.

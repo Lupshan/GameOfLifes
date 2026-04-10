@@ -78,8 +78,14 @@ async def login(
 
 
 @router.post("/logout")
-async def logout(response: Response) -> dict[str, str]:
-    response.delete_cookie(key=_COOKIE_NAME, path="/")
+async def logout(response: Response, settings: Settings = Depends(get_settings)) -> dict[str, str]:
+    response.delete_cookie(
+        key=_COOKIE_NAME,
+        path="/",
+        secure=not settings.debug,
+        samesite="lax",
+        httponly=True,
+    )
     return {"status": "ok"}
 
 

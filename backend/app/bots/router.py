@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import select as sa_select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -116,6 +116,7 @@ async def get_bot_detail(
 @router.post("/{bot_id}/publish", response_model=BotResponse)
 async def publish(
     bot_id: str,
+    request: Request,
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_session),
 ) -> BotResponse:
@@ -134,12 +135,19 @@ async def publish(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Bot has compile errors"
         )
     await publish_bot(bot, session)
+
+    # Load bot bytecode into the engine.
+    engine = request.app.state.engine
+    if engine and version.bytecode:
+        await engine.load_bot(bot.id, version.bytecode)
+
     return _bot_response(bot, version.compile_ok, version.compile_errors)
 
 
 @router.delete("/{bot_id}")
 async def delete(
     bot_id: str,
+    request: Request,
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, str]:
@@ -148,5 +156,11 @@ async def delete(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Bot not found")
     if bot.user_id != user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not your bot")
+
+    # Unload from engine if published.
+    engine = request.app.state.engine
+    if engine and bot.published:
+        await engine.unload_bot(bot.id)
+
     await delete_bot(bot, session)
     return {"status": "deleted"}

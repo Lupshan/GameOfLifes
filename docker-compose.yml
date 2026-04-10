@@ -15,12 +15,6 @@ services:
       timeout: 5s
       retries: 5
 
-  engine:
-    build:
-      context: .
-      dockerfile: engine/Dockerfile
-    restart: unless-stopped
-
   backend:
     build:
       context: .
@@ -28,14 +22,13 @@ services:
     environment:
       GOL_DATABASE_URL: postgresql+asyncpg://gol:${POSTGRES_PASSWORD}@postgres:5432/gameoflifes
       GOL_JWT_SECRET: ${JWT_SECRET:?JWT_SECRET environment variable is required}
+      GOL_ENGINE_PATH: /usr/local/bin/gameoflifes_engine
       GOL_DEBUG: "false"
     ports:
       - "8000:8000"
     depends_on:
       postgres:
         condition: service_healthy
-      engine:
-        condition: service_started
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 10s

@@ -1,11 +1,25 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import { auth } from '$lib/stores/auth';
+	import { goto } from '$app/navigation';
+	import { get } from 'svelte/store';
 
 	let blocklyDiv: HTMLDivElement;
 	let workspace: unknown = null;
 	let generatedSource = $state('');
 
 	onMount(async () => {
+		// Auth guard: redirect to login if not authenticated.
+		let state = get(auth);
+		if (!state.loggedIn) {
+			await auth.fetchUser();
+			state = get(auth);
+			if (!state.loggedIn) {
+				goto('/login');
+				return;
+			}
+		}
+
 		const BlocklyLib = await import('blockly');
 		type WorkspaceSvg = InstanceType<typeof BlocklyLib.WorkspaceSvg>;
 		const { registerBlocks, TOOLBOX_XML } = await import('$lib/blocks/definitions');
@@ -59,7 +73,6 @@
 
 	// --- Submit flow ---
 	import { createBot } from '$lib/api';
-	import { goto } from '$app/navigation';
 
 	let botName = $state('');
 	let showSubmit = $state(false);

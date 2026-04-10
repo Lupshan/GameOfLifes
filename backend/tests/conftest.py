@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import AsyncIterator
+from unittest.mock import AsyncMock
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -29,6 +30,8 @@ async def client(settings: Settings) -> AsyncIterator[AsyncClient]:
     await create_tables()
 
     app = create_app(settings)
+    # Provide a mock engine so endpoints that access app.state.engine don't crash.
+    app.state.engine = AsyncMock()
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
