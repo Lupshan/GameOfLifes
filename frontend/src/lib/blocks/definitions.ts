@@ -80,10 +80,10 @@ export function registerBlocks(): void {
 	// --- Variable declaration ---
 	Blockly.Blocks['gol_let'] = {
 		init(this: Blockly.Block) {
-			this.appendValueInput('VALUE').appendField('let').appendField(
-				new Blockly.FieldTextInput('x'),
-				'NAME'
-			).appendField('=');
+			this.appendValueInput('VALUE')
+				.appendField('let')
+				.appendField(new Blockly.FieldTextInput('x'), 'NAME')
+				.appendField('=');
 			this.setPreviousStatement(true, null);
 			this.setNextStatement(true, null);
 			this.setColour(60);
@@ -93,10 +93,9 @@ export function registerBlocks(): void {
 	// --- Variable assignment ---
 	Blockly.Blocks['gol_set'] = {
 		init(this: Blockly.Block) {
-			this.appendValueInput('VALUE').appendField(
-				new Blockly.FieldTextInput('x'),
-				'NAME'
-			).appendField('=');
+			this.appendValueInput('VALUE')
+				.appendField(new Blockly.FieldTextInput('x'), 'NAME')
+				.appendField('=');
 			this.setPreviousStatement(true, null);
 			this.setNextStatement(true, null);
 			this.setColour(60);
