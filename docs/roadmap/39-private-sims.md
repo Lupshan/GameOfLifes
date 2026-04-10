@@ -1,8 +1,8 @@
 # 39 — On-demand private simulations
 
-**Status**: not started (v2)
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Let users spin up a private simulation with a chosen set of bots and config, separate from the persistent shared world. Useful for experiments, A/B testing of bot variants, and curated events.
@@ -24,7 +24,7 @@ Let users spin up a private simulation with a chosen set of bots and config, sep
 - Per-sim isolation = one subprocess; no shared state.
 
 ## Definition of Done
-- [ ] Private sim API + lifecycle management.
-- [ ] UI to launch and watch.
-- [ ] Quota enforcement.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Private sim API: POST /sims, GET /sims, GET /sims/{id}, DELETE /sims/{id}.
+- [x] UI: /sandbox route to launch, list, and delete private sims.
+- [x] Quota: max 3 concurrent sims/user, max 10000 ticks/sim.
+- [x] `docs/roadmap/README.md` table updated to `done`.

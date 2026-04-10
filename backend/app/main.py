@@ -17,6 +17,7 @@ from app.db.engine import create_tables, init_db
 from app.health.router import router as health_router
 from app.logging_config import setup_logging
 from app.metrics import metrics_endpoint
+from app.sims.router import router as sims_router
 from app.snapshots.router import lineage_router
 from app.snapshots.router import router as snapshots_router
 from app.stats.router import router as stats_router
@@ -48,6 +49,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(snapshots_router)
     app.include_router(lineage_router)
     app.include_router(stats_router)
+    app.include_router(sims_router)
     return app
 
 
