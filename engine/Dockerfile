@@ -20,8 +20,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libstdc++6 \
     && rm -rf /var/lib/apt/lists/*
 
+RUN groupadd -g 1000 gol && useradd -u 1000 -g gol -m gol
+
 COPY --from=build /src/build/gameoflifes_engine /usr/local/bin/gameoflifes_engine
 COPY engine/config/ /etc/gameoflifes/
 
+USER gol
 ENTRYPOINT ["gameoflifes_engine"]
 CMD ["--ipc", "--config", "/etc/gameoflifes/default.toml"]

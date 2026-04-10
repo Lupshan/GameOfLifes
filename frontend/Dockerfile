@@ -14,4 +14,7 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
+# Run nginx as non-root where possible.
+RUN chown -R nginx:nginx /usr/share/nginx/html /var/cache/nginx
+
 EXPOSE 80

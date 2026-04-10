@@ -17,6 +17,9 @@ COPY backend/app/ ./app/
 COPY backend/alembic.ini ./
 COPY backend/alembic/ ./alembic/
 
+RUN groupadd -g 1000 gol && useradd -u 1000 -g gol -m gol
+USER gol
+
 EXPOSE 8000
 
 CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

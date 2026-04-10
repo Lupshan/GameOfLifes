@@ -8,8 +8,9 @@ from collections.abc import AsyncIterator
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-# Disable rate limiting in tests.
+# Test environment setup.
 os.environ["GOL_RATE_LIMIT"] = "0"
+os.environ["GOL_DEBUG"] = "true"
 
 from app.config import Settings
 from app.db.engine import create_tables, init_db
