@@ -12,6 +12,7 @@ from app.bots.router import router as bots_router
 from app.config import Settings, get_settings
 from app.db.engine import create_tables, init_db
 from app.health.router import router as health_router
+from app.ws.router import router as ws_router
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -28,6 +29,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(health_router)
     app.include_router(auth_router)
     app.include_router(bots_router)
+    app.include_router(ws_router)
     return app
 
 

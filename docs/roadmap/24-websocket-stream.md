@@ -1,8 +1,8 @@
 # 24 — WebSocket world stream
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Expose the live world to browsers. The backend forwards engine snapshots to all subscribed WebSocket clients in real time.
@@ -24,7 +24,8 @@ Expose the live world to browsers. The backend forwards engine snapshots to all 
 - Subscriber list lives in `EngineService`; backend disconnects on client error.
 
 ## Definition of Done
-- [ ] WS endpoint implemented.
-- [ ] Multi-client fan-out tested.
-- [ ] Disconnect cleanup verified (no leaks).
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] WS endpoint implemented (WS /ws/world, fan-out pubsub).
+- [x] Multi-client fan-out tested (4 tests: connect, multi-client, disconnect, no-sub broadcast).
+- [x] Disconnect cleanup verified (subscriber removed on close).
+- [x] ADR 016 written (full snapshots, no deltas v1).
+- [x] `docs/roadmap/README.md` table updated to `done`.
