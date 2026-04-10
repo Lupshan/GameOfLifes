@@ -90,8 +90,14 @@ class EngineProcess:
                     break
                 try:
                     data = json.loads(line)
+                    raw_event = data.get("event")
+                    if raw_event is None:
+                        logger.warning(
+                            "Engine event missing 'event' field: %s", line.decode().rstrip()
+                        )
+                        continue
                     event = Event(
-                        event=EventType(data.get("event", "error")),
+                        event=EventType(raw_event),
                         tick=data.get("tick", 0),
                         data=data,
                         error=data.get("error"),
@@ -102,10 +108,12 @@ class EngineProcess:
                             self._event_queue.get_nowait()
                     await self._event_queue.put(event)
                 except (json.JSONDecodeError, ValueError) as e:
-                    logger.warning("Failed to parse engine event: %s", e)
+                    logger.warning(
+                        "Failed to parse engine event: %s (raw: %s)", e, line.decode().rstrip()
+                    )
         except asyncio.CancelledError:
             pass
-        except Exception:
+        except OSError:
             logger.exception("Engine reader task crashed")
         finally:
             self._running = False

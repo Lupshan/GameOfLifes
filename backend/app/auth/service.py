@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from datetime import UTC, datetime, timedelta
 
 import jwt
@@ -9,6 +10,8 @@ from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 
 from app.config import Settings
+
+logger = logging.getLogger(__name__)
 
 _hasher = PasswordHasher()
 
@@ -38,5 +41,9 @@ def decode_token(token: str, settings: Settings) -> str | None:
     try:
         payload = jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
         return payload.get("sub")
+    except jwt.ExpiredSignatureError:
+        logger.debug("JWT token expired")
+        return None
     except jwt.PyJWTError:
+        logger.debug("JWT decode failed", exc_info=True)
         return None
