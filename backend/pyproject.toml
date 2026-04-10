@@ -16,6 +16,7 @@ dependencies = [
     "zstandard>=0.23,<0.24",
     "structlog>=24.4,<25.0",
     "prometheus-client>=0.21,<0.22",
+    "slowapi>=0.1.9,<0.2",
 ]
 
 [tool.uv.sources]

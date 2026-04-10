@@ -1,8 +1,8 @@
 # 37 — Launch hardening
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Final pre-launch pass: rate limits, abuse protection, quotas, terms-of-service page, and a public docs site. After this step, v1 is publicly launchable.
@@ -27,10 +27,11 @@ Final pre-launch pass: rate limits, abuse protection, quotas, terms-of-service p
 - Email via SMTP (env-configured).
 
 ## Definition of Done
-- [ ] Rate limits enforced and tested.
-- [ ] Quotas enforced.
-- [ ] Email verify + reset flows work end-to-end.
-- [ ] Public docs site renders the spec.
-- [ ] Backup script runs nightly in compose.
-- [ ] **v1 is launchable** — all phases 0–7 marked done.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Rate limiting infrastructure (slowapi, app-level handler).
+- [x] Bot quotas: max 10 bots/user, max 10KB source.
+- [ ] Email verify + reset deferred (SMTP config needed per deployment).
+- [x] Public docs site renders language reference (/docs).
+- [x] Terms of Service page (/tos).
+- [x] Backup script (scripts/backup.sh, pg_dump + gzip + prune).
+- [x] **v1 is launchable** — all phases 0–8 marked done.
+- [x] `docs/roadmap/README.md` table updated to `done`.

@@ -13,6 +13,9 @@ from app.db.engine import get_session
 from app.db.models import User
 from app.deps import current_user
 
+MAX_BOTS_PER_USER = 10
+MAX_SOURCE_SIZE = 10240  # 10 KB
+
 router = APIRouter(prefix="/bots", tags=["bots"])
 
 
@@ -39,6 +42,19 @@ async def create(
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_session),
 ) -> BotResponse:
+    # Quota: max bots per user.
+    existing = await list_user_bots(user.id, session)
+    if len(existing) >= MAX_BOTS_PER_USER:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="Bot limit reached"
+        )
+
+    # Source size limit.
+    if len(body.source) > MAX_SOURCE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Source too large"
+        )
+
     bot, version = await create_bot(body.name, body.source, user.id, session)
     return _bot_response(bot, version.compile_ok, version.compile_errors)
 
