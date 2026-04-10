@@ -1,0 +1,22 @@
+# Build artifacts
+engine/build/
+frontend/build/
+frontend/node_modules/
+frontend/.svelte-kit/
+backend/.venv/
+bytecode/.venv/
+
+# Git and IDE
+.git/
+.github/
+.vscode/
+.idea/
+
+# Docs (not needed in images)
+docs/
+
+# Project files
+*.md
+!engine/config/*.toml
+.env
+.env.*

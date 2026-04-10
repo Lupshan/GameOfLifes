@@ -17,9 +17,10 @@ COPY backend/app/ ./app/
 COPY backend/alembic.ini ./
 COPY backend/alembic/ ./alembic/
 
-RUN groupadd -g 1001 gol && useradd -u 1001 -g gol -m gol
+RUN groupadd -g 1001 gol && useradd -u 1001 -g gol -m gol \
+    && chown -R gol:gol /app
 USER gol
 
 EXPOSE 8000
 
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "--frozen", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
