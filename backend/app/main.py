@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
@@ -62,6 +63,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     from app.middleware.rate_limit import limiter
 
     app = FastAPI(title=settings.app_name, debug=settings.debug, lifespan=lifespan)
+
+    # CORS — restrict to known frontend origins.
+    allowed_origins = ["http://localhost:3000", "http://localhost:5173"]
+    if not settings.debug:
+        allowed_origins = [f"https://{settings.app_name.lower()}.example.com"]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=allowed_origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "DELETE"],
+        allow_headers=["Content-Type", "Authorization"],
+    )
+
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
     app.add_middleware(SlowAPIMiddleware)

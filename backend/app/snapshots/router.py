@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -61,13 +63,15 @@ async def get_snapshot(
     if snap is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Snapshot not found")
 
-    from pathlib import Path
-
     path = Path(snap.file_path).resolve()
     # Ensure the resolved path stays within the snapshots directory (path traversal protection).
     base_dir = Path("snapshots").resolve()
-    if not str(path).startswith(str(base_dir)):
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid snapshot path")
+    try:
+        path.relative_to(base_dir)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid snapshot path"
+        ) from exc
     if not path.exists():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Snapshot file missing")
 
