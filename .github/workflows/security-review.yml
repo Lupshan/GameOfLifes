@@ -15,6 +15,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: anthropics/claude-code-security-review@v1
+      - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: "--model claude-sonnet-4-6"
+          prompt: |
+            Review this PR for security issues only. Focus on:
+            - Injection (SQL, command, XSS, path traversal)
+            - Auth/authz bypass
+            - Secrets or credentials in code
+            - Unsafe deserialization
+            - CORS / CSRF misconfig
+            - Docker / infra misconfig
+            Report only confirmed or high-likelihood issues. No style or perf comments.
