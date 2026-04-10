@@ -2,7 +2,7 @@
 
 namespace gol {
 
-double day_phase(std::uint64_t tick, int day_length) {
+double day_phase(std::uint64_t tick, int day_length) noexcept {
     if (day_length <= 0) {
         return 0.0;
     }
@@ -10,14 +10,14 @@ double day_phase(std::uint64_t tick, int day_length) {
            static_cast<double>(day_length);
 }
 
-bool is_night(std::uint64_t tick, int day_length) {
+bool is_night(std::uint64_t tick, int day_length) noexcept {
     if (day_length <= 0) {
         return false;
     }
     return day_phase(tick, day_length) >= 0.5;
 }
 
-Season current_season(std::uint64_t tick, int year_length) {
+Season current_season(std::uint64_t tick, int year_length) noexcept {
     if (year_length <= 0) {
         return Season::Spring;
     }
@@ -33,7 +33,7 @@ Season current_season(std::uint64_t tick, int year_length) {
     return static_cast<Season>(quarter);
 }
 
-double seasonal_resource_factor(Season s) {
+double seasonal_resource_factor(Season s) noexcept {
     switch (s) {
     case Season::Spring:
         return 1.5;
@@ -47,7 +47,7 @@ double seasonal_resource_factor(Season s) {
     return 1.0;
 }
 
-double night_vision_factor(std::uint64_t tick, int day_length) {
+double night_vision_factor(std::uint64_t tick, int day_length) noexcept {
     if (is_night(tick, day_length)) {
         return 0.5;
     }

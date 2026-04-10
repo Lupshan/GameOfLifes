@@ -38,7 +38,7 @@ struct Traits {
 };
 
 // Deterministic mapping from genome bytes to trait values.
-Traits decode(const Genome& genome);
+Traits decode(const Genome& genome) noexcept;
 
 } // namespace gol
 
