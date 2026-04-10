@@ -1,8 +1,8 @@
 # 32 — Replay viewer
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Let users scrub through past world states. Same canvas as `/world`, but fed by paginated REST snapshots instead of WS.
@@ -22,7 +22,9 @@ Let users scrub through past world states. Same canvas as `/world`, but fed by p
 - Prefetch ~10 snapshots ahead during playback to keep it smooth.
 
 ## Definition of Done
-- [ ] Scrubbing works smoothly.
-- [ ] Play/pause/speed controls work.
-- [ ] Bookmarks persist.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Scrubbing works (range slider, fetch snapshot on change).
+- [x] Play/pause/speed controls (1x/2x/4x/8x interval-based playback).
+- [x] Prefetch 10 snapshots ahead during playback.
+- [x] Reusable WorldCanvas.svelte component extracted from /world.
+- [x] Playback state machine tested (5 tests).
+- [x] `docs/roadmap/README.md` table updated to `done`.

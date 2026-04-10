@@ -18,6 +18,7 @@
 <nav style="display:flex;gap:1rem;padding:0.5rem 1rem;background:#222;color:#fff;align-items:center;">
 	<a href="/" style="color:#fff;text-decoration:none;font-weight:bold;">GameOfLifes</a>
 	<a href="/world" style="color:#ccc;text-decoration:none;">World</a>
+	<a href="/replay" style="color:#ccc;text-decoration:none;">Replay</a>
 	<a href="/stats" style="color:#ccc;text-decoration:none;">Stats</a>
 	{#if token}
 		<a href="/edit" style="color:#ccc;text-decoration:none;">Editor</a>
