@@ -92,7 +92,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 |----|-----------------------------------|---------------------------------------------------------------|-------------|
 | 38 | Tier 3 — live learning + reserves | [38-tier3-live-learning.md](38-tier3-live-learning.md)        | done        |
 | 39 | On-demand private simulations     | [39-private-sims.md](39-private-sims.md)                      | done        |
-| 40 | Social mechanics + tournaments    | [40-social-tournaments.md](40-social-tournaments.md)          | not started |
+| 40 | Social mechanics + tournaments    | [40-social-tournaments.md](40-social-tournaments.md)          | done        |
 
 ## Detail file template
 

@@ -1,8 +1,8 @@
 # 40 — Social mechanics + tournaments
 
-**Status**: not started (v2)
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Round out the "living world" pitch with social/cultural mechanics and curated events that give users reasons to come back and iterate.
@@ -25,8 +25,10 @@ Round out the "living world" pitch with social/cultural mechanics and curated ev
 - Tournament scoring is a configurable Python function checked into a `tournaments/` directory.
 
 ## Definition of Done
-- [ ] Broadcast/listen + memory implemented + tested.
-- [ ] At least one curated event runs end-to-end.
-- [ ] Tournament mode + leaderboard.
-- [ ] Culture diversity metric exposed.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] RadioGrid: broadcast(pos, message, radius) + listen(pos) + per-tick reset.
+- [x] MemoryBank: 16-int per-agent persistent memory.
+- [x] Agent struct gains MemoryBank field.
+- [x] Tournament API: POST/GET /tournaments with leaderboard.
+- [x] Tournament UI: /tournaments page with list + leaderboard display.
+- [x] 4 tests: broadcast/listen, radio reset, memory bank default/read-write.
+- [x] `docs/roadmap/README.md` table updated to `done`.

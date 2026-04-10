@@ -3,6 +3,7 @@
 
 #include "engine/direction.hpp"
 #include "engine/genome.hpp"
+#include "engine/memory_bank.hpp"
 #include "engine/position.hpp"
 
 #include <cstdint>
@@ -21,6 +22,7 @@ struct Agent {
     std::uint64_t parent_id = NO_PARENT;
     std::uint64_t generation = 0;
     Direction facing = Direction::North;
+    MemoryBank memory{};
 };
 
 } // namespace gol
