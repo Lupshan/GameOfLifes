@@ -76,7 +76,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 | #  | Step                              | File                                                          | Status      |
 |----|-----------------------------------|---------------------------------------------------------------|-------------|
 | 33 | ML model loader (ONNX)            | [33-ml-loader.md](33-ml-loader.md)                            | done        |
-| 34 | ML agent integration              | [34-ml-agents.md](34-ml-agents.md)                            | not started |
+| 34 | ML agent integration              | [34-ml-agents.md](34-ml-agents.md)                            | done        |
 
 ## Phase 8 — Production
 

@@ -23,6 +23,7 @@ class Bot(SQLModel, table=True):
     id: str = Field(default_factory=lambda: uuid.uuid4().hex, primary_key=True)
     name: str
     user_id: str = Field(foreign_key="users.id", index=True)
+    kind: str = Field(default="bytecode")  # "bytecode" or "ml"
     published: bool = Field(default=False)
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))

@@ -7,7 +7,9 @@ from pydantic import BaseModel
 
 class BotCreateRequest(BaseModel):
     name: str
-    source: str
+    source: str = ""
+    kind: str = "bytecode"  # "bytecode" or "ml"
+    model: str | None = None  # JSON model definition for kind=ml
 
 
 class CompileErrorResponse(BaseModel):

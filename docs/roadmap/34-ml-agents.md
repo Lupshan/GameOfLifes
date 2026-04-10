@@ -1,8 +1,8 @@
 # 34 — ML agent integration
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Tier 2 agents share the world with Tier 1 bytecode agents. An agent's "brain" is either a `Vm` or an `MlRuntime` instance — same interface, same intrinsics, same fairness rules.
@@ -24,7 +24,8 @@ Tier 2 agents share the world with Tier 1 bytecode agents. An agent's "brain" is
 - ML agents use the same energy/genome system as bytecode agents — only the brain differs.
 
 ## Definition of Done
-- [ ] `Brain` interface + both impls.
-- [ ] Mixed population test passes.
-- [ ] Submission API supports both kinds.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `Brain` interface + BytecodeBrain + MlBrain implementations.
+- [x] Mixed population test (5 ML + 5 bytecode agents, 50 ticks).
+- [x] Backend accepts kind=bytecode|ml in POST /bots.
+- [x] Bot DB model gains `kind` field.
+- [x] `docs/roadmap/README.md` table updated to `done`.
