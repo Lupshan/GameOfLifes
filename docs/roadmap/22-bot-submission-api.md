@@ -1,8 +1,8 @@
 # 22 — Bot submission API
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Let authenticated users submit bot source code. The backend invokes the Python compiler, stores both source and bytecode, and exposes a list/get API.
@@ -26,7 +26,7 @@ Let authenticated users submit bot source code. The backend invokes the Python c
 - Backend depends on `bytecode` package — added to `backend/pyproject.toml` as a path dep.
 
 ## Definition of Done
-- [ ] All endpoints implemented + tested.
-- [ ] Compile errors returned cleanly.
-- [ ] Cross-brick path dep works.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] All endpoints implemented + tested (7 tests: create, compile error, list, detail, publish, auth).
+- [x] Compile errors returned cleanly as structured JSON.
+- [x] Cross-brick path dep works (bytecode via uv sources + hatchling).
+- [x] `docs/roadmap/README.md` table updated to `done`.
