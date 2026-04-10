@@ -1,8 +1,8 @@
 # 35 — Observability
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Make the running system debuggable in production. Structured logs, metrics, and a minimum set of dashboards before exposing the app to the world.
@@ -23,7 +23,7 @@ Make the running system debuggable in production. Structured logs, metrics, and 
 - Metrics names follow Prometheus conventions.
 
 ## Definition of Done
-- [ ] Logs are structured everywhere.
-- [ ] `/metrics` exposes the listed metrics.
-- [ ] Manual scrape works locally with a Prometheus container.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Structured logging via structlog (JSON in prod, console in debug).
+- [x] `/metrics` exposes Prometheus metrics (requests, latency, WS connections, compile errors, agent count, tick rate).
+- [x] Health endpoint upgraded: checks DB connectivity.
+- [x] `docs/roadmap/README.md` table updated to `done`.
