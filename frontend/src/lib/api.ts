@@ -1,6 +1,6 @@
 /** API fetch wrapper — sends credentials (httpOnly cookie) automatically. */
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 export async function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
 	const headers: Record<string, string> = {
