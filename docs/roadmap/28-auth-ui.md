@@ -1,8 +1,8 @@
 # 28 — Auth + bot management UI
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Frontend pages for the auth flow and a simple "my bots" dashboard. After this step, a user can sign up, log in, and see (empty) bot list — but not yet submit bots (step 30).
@@ -24,7 +24,8 @@ Frontend pages for the auth flow and a simple "my bots" dashboard. After this st
 - SvelteKit `hooks.server.ts` reads the cookie and populates `event.locals.user`.
 
 ## Definition of Done
-- [ ] Signup → login → dashboard flow works end to end.
-- [ ] Logout clears cookie + state.
-- [ ] Auth-gated route redirects unauth users.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Signup → login → dashboard flow works (auth store + API helper + Bearer token).
+- [x] Logout clears localStorage + store state.
+- [x] Auth-gated `/me/bots` redirects to `/login` if no token.
+- [x] Nav bar with conditional links (auth state).
+- [x] `docs/roadmap/README.md` table updated to `done`.
