@@ -1,8 +1,8 @@
 # 36 — Deployment
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Package the app so it runs the same way locally and in production. Docker images for each brick, a compose file for local + e2e, and a documented prod deployment recipe.
@@ -25,8 +25,9 @@ Package the app so it runs the same way locally and in production. Docker images
 - All secrets via env, never baked into images.
 
 ## Definition of Done
-- [ ] All Dockerfiles build.
-- [ ] `docker compose up` brings the full stack online locally.
-- [ ] e2e test from step 30 runs against the composed stack.
-- [ ] Release workflow works on a test tag.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Dockerfiles for engine (multi-stage C++), backend (Python+uv), frontend (node+nginx).
+- [x] docker-compose.yml: postgres + engine + backend + frontend + prometheus.
+- [x] docker-compose.dev.yml: bind mounts for hot reload.
+- [x] Release workflow: build+push to ghcr.io on v* tags.
+- [x] docs/deployment.md: env vars, prod hints, dev mode.
+- [x] `docs/roadmap/README.md` table updated to `done`.

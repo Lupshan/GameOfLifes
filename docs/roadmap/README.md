@@ -83,7 +83,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 | #  | Step                              | File                                                          | Status      |
 |----|-----------------------------------|---------------------------------------------------------------|-------------|
 | 35 | Observability                     | [35-observability.md](35-observability.md)                    | done        |
-| 36 | Deployment                        | [36-deployment.md](36-deployment.md)                          | not started |
+| 36 | Deployment                        | [36-deployment.md](36-deployment.md)                          | done        |
 | 37 | Launch hardening                  | [37-launch-hardening.md](37-launch-hardening.md)              | not started |
 
 ## Phase 9 — v2
