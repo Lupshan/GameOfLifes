@@ -10,12 +10,12 @@ name = "gameoflifes-bytecode"
 version = "1.0.0"
 description = "GameOfLifes in-house scripting language and bytecode compiler."
 requires-python = ">=3.12"
-license = "MIT"
+license = {text = "MIT"}
+dependencies = []
 
 [project.urls]
 Homepage = "https://github.com/Lupshan/GameOfLifes"
 Repository = "https://github.com/Lupshan/GameOfLifes"
-dependencies = []
 
 [dependency-groups]
 dev = [
