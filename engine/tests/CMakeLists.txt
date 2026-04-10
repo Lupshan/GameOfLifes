@@ -19,6 +19,7 @@ add_executable(engine_tests
     test_brain.cpp
     test_reserve.cpp
     test_broadcast.cpp
+    test_lineage_log.cpp
 )
 target_link_libraries(engine_tests PRIVATE engine_core doctest::doctest)
 
