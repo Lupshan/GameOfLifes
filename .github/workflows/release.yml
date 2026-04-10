@@ -15,6 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Lowercase repo name
+        id: repo
+        run: echo "name=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -29,8 +33,8 @@ jobs:
           file: engine/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/engine:${{ github.ref_name }}
-            ghcr.io/${{ github.repository }}/engine:latest
+            ghcr.io/${{ steps.repo.outputs.name }}/engine:${{ github.ref_name }}
+            ghcr.io/${{ steps.repo.outputs.name }}/engine:latest
 
       - name: Build & push backend
         uses: docker/build-push-action@v6
@@ -39,8 +43,8 @@ jobs:
           file: backend/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/backend:${{ github.ref_name }}
-            ghcr.io/${{ github.repository }}/backend:latest
+            ghcr.io/${{ steps.repo.outputs.name }}/backend:${{ github.ref_name }}
+            ghcr.io/${{ steps.repo.outputs.name }}/backend:latest
 
       - name: Build & push frontend
         uses: docker/build-push-action@v6
@@ -49,8 +53,8 @@ jobs:
           file: frontend/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/frontend:${{ github.ref_name }}
-            ghcr.io/${{ github.repository }}/frontend:latest
+            ghcr.io/${{ steps.repo.outputs.name }}/frontend:${{ github.ref_name }}
+            ghcr.io/${{ steps.repo.outputs.name }}/frontend:latest
 
   github-release:
     name: Create GitHub Release
@@ -65,7 +69,10 @@ jobs:
 
       - name: Generate release notes
         id: notes
+        env:
+          REPO_LC: ${{ github.repository }}
         run: |
+          REPO_LC="${REPO_LC,,}"
           prev_tag=$(git tag --sort=-v:refname | sed -n '2p')
           if [ -z "$prev_tag" ]; then
             range="HEAD"
@@ -77,9 +84,9 @@ jobs:
             echo "## Docker images"
             echo ""
             echo '```bash'
-            echo "docker pull ghcr.io/${{ github.repository }}/engine:${{ github.ref_name }}"
-            echo "docker pull ghcr.io/${{ github.repository }}/backend:${{ github.ref_name }}"
-            echo "docker pull ghcr.io/${{ github.repository }}/frontend:${{ github.ref_name }}"
+            echo "docker pull ghcr.io/${REPO_LC}/engine:${{ github.ref_name }}"
+            echo "docker pull ghcr.io/${REPO_LC}/backend:${{ github.ref_name }}"
+            echo "docker pull ghcr.io/${REPO_LC}/frontend:${{ github.ref_name }}"
             echo '```'
             echo ""
             echo "## Changes since ${prev_tag:-initial}"
