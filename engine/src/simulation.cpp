@@ -186,6 +186,7 @@ void reap_dead(World& world, LineageLog* log) {
 }
 
 void Simulation::tick() {
+    world_.rebuild_caches();
     for (auto& agent : world_.agents()) {
         step_agent(agent, world_);
     }

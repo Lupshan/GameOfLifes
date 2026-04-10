@@ -9,8 +9,11 @@
 namespace gol {
 
 static constexpr int VM_MAX_STACK = 256;
-static constexpr int VM_MAX_LOCALS = 256;
-static constexpr int VM_MAX_CALL_DEPTH = 32;
+static constexpr int VM_MAX_LOCALS = 256;   // Max local variables per frame (uint8 addressable).
+static constexpr int VM_MAX_CALL_DEPTH = 32; // Prevent runaway recursion within one tick.
+// Intrinsic opcodes (perceive, move, eat…) cost 10× a normal op. This makes
+// world-interaction expensive relative to pure computation, forcing bots to
+// budget their per-tick instruction allowance wisely.
 static constexpr int INTRINSIC_COST = 10;
 
 enum class VmStatus {

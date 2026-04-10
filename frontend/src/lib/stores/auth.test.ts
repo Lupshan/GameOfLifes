@@ -1,38 +1,32 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// Mock localStorage before importing auth store.
-const storage: Record<string, string> = {};
-vi.stubGlobal('localStorage', {
-	getItem: (key: string) => storage[key] ?? null,
-	setItem: (key: string, val: string) => { storage[key] = val; },
-	removeItem: (key: string) => { delete storage[key]; }
-});
+// Mock fetch globally.
+const mockFetch = vi.fn();
+vi.stubGlobal('fetch', mockFetch);
 
-// Mock fetch.
-vi.stubGlobal('fetch', vi.fn());
-
-describe('auth store concept', () => {
+describe('auth store (httpOnly cookies)', () => {
 	beforeEach(() => {
-		Object.keys(storage).forEach(k => delete storage[k]);
+		mockFetch.mockReset();
 	});
 
-	it('localStorage token persistence works', () => {
-		localStorage.setItem('gol_token', 'test-token');
-		expect(localStorage.getItem('gol_token')).toBe('test-token');
-		localStorage.removeItem('gol_token');
-		expect(localStorage.getItem('gol_token')).toBeNull();
+	it('apiFetch sends credentials: include for cookie auth', async () => {
+		mockFetch.mockResolvedValue(new Response('{}'));
+
+		const { apiFetch } = await import('$lib/api');
+		await apiFetch('/auth/me');
+
+		expect(mockFetch).toHaveBeenCalledTimes(1);
+		const [, options] = mockFetch.mock.calls[0];
+		expect(options.credentials).toBe('include');
 	});
 
-	it('api fetch adds Authorization header', async () => {
-		localStorage.setItem('gol_token', 'my-jwt');
-		const mockFetch = vi.fn().mockResolvedValue(new Response('{}'));
-		vi.stubGlobal('fetch', mockFetch);
+	it('apiFetch does not add Authorization header', async () => {
+		mockFetch.mockResolvedValue(new Response('{}'));
 
-		// Inline the logic from api.ts to test header injection.
-		const token = localStorage.getItem('gol_token');
-		const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-		if (token) headers['Authorization'] = `Bearer ${token}`;
+		const { apiFetch } = await import('$lib/api');
+		await apiFetch('/auth/me');
 
-		expect(headers['Authorization']).toBe('Bearer my-jwt');
+		const [, options] = mockFetch.mock.calls[0];
+		expect(options.headers['Authorization']).toBeUndefined();
 	});
 });

@@ -59,6 +59,30 @@ async def get_latest_version(bot_id: str, session: AsyncSession) -> BotVersion |
     return result.scalars().first()
 
 
+async def get_latest_versions_bulk(
+    bot_ids: list[str], session: AsyncSession
+) -> dict[str, BotVersion]:
+    """Fetch the latest BotVersion for each bot in a single query (avoids N+1)."""
+    from sqlalchemy import func
+
+    # Subquery: max version per bot_id.
+    max_ver = (
+        select(BotVersion.bot_id, func.max(BotVersion.version).label("max_version"))
+        .where(BotVersion.bot_id.in_(bot_ids))  # type: ignore[union-attr]
+        .group_by(BotVersion.bot_id)
+        .subquery()
+    )
+
+    stmt = select(BotVersion).join(
+        max_ver,
+        (BotVersion.bot_id == max_ver.c.bot_id)
+        & (BotVersion.version == max_ver.c.max_version),
+    )
+    result = await session.execute(stmt)
+    versions = result.scalars().all()
+    return {v.bot_id: v for v in versions}
+
+
 async def publish_bot(bot: Bot, session: AsyncSession) -> None:
     bot.published = True
     session.add(bot)

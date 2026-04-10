@@ -32,7 +32,9 @@ class TournamentResponse(BaseModel):
     leaderboard: list[dict[str, object]]
 
 
-# In-memory tournament registry.
+# In-memory tournament registry — intentionally ephemeral for v1.
+# Tournaments are recreated manually; losing them on restart is acceptable.
+# Persist to DB if tournaments need to survive restarts (tracked in audit B6).
 _tournaments: dict[str, dict[str, object]] = {}
 
 

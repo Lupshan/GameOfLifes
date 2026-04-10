@@ -15,8 +15,8 @@ from app.deps import current_user
 
 router = APIRouter(prefix="/sims", tags=["sims"])
 
-MAX_SIMS_PER_USER = 3
-MAX_TICKS_PER_SIM = 10000
+MAX_SIMS_PER_USER = 3  # Prevent a single user from monopolizing engine subprocesses.
+MAX_TICKS_PER_SIM = 10000  # ~2 min of sim time at 100 ticks/s; keeps shared infra fair.
 
 
 class SimCreateRequest(BaseModel):
@@ -33,7 +33,10 @@ class SimResponse(BaseModel):
     created_at: str
 
 
-# In-memory sim registry (production would use DB + engine pool).
+# In-memory sim registry — intentionally ephemeral for v1.
+# Sims are lightweight, short-lived proxies to engine subprocesses.
+# They are recreated on demand; losing them on restart is acceptable.
+# Persist to DB if sims need to survive restarts (tracked in audit B6).
 _sims: dict[str, dict[str, object]] = {}
 
 

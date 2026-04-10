@@ -23,8 +23,10 @@ struct SnapshotAgent {
     std::uint64_t generation;
 };
 
+static constexpr int SNAPSHOT_FORMAT_VERSION = 2;
+
 struct Snapshot {
-    int version = 2;
+    int version = SNAPSHOT_FORMAT_VERSION;
     std::uint64_t tick;
     int width;
     int height;

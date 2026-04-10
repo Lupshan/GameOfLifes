@@ -1,23 +1,17 @@
-/** API fetch wrapper — adds Bearer token if available. */
+/** API fetch wrapper — sends credentials (httpOnly cookie) automatically. */
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export async function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
-	const token =
-		typeof localStorage !== 'undefined' ? localStorage.getItem('gol_token') : null;
-
 	const headers: Record<string, string> = {
 		'Content-Type': 'application/json',
 		...(options.headers as Record<string, string>)
 	};
 
-	if (token) {
-		headers['Authorization'] = `Bearer ${token}`;
-	}
-
 	return fetch(`${API_BASE}${path}`, {
 		...options,
-		headers
+		headers,
+		credentials: 'include'
 	});
 }
 
@@ -25,7 +19,11 @@ export async function apiFetch(path: string, options: RequestInit = {}): Promise
 export async function createBot(
 	name: string,
 	source: string
-): Promise<{ id: string; compile_ok: boolean; compile_errors?: { message: string; line: number; col: number }[] }> {
+): Promise<{
+	id: string;
+	compile_ok: boolean;
+	compile_errors?: { message: string; line: number; col: number }[];
+}> {
 	const resp = await apiFetch('/bots', {
 		method: 'POST',
 		body: JSON.stringify({ name, source })

@@ -1,10 +1,13 @@
-"""Stats endpoint: aggregated simulation statistics."""
+"""Stats endpoint: aggregated simulation statistics.
+
+Aggregation happens in SQL (GROUP BY) to avoid loading all events into memory.
+"""
 
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import case, func, literal_column, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.engine import get_session
@@ -33,36 +36,31 @@ async def get_stats(
     bucket_size: int = Query(100),
     session: AsyncSession = Depends(get_session),
 ) -> StatsResponse:
-    stmt = select(LineageEvent).where(LineageEvent.tick >= from_tick, LineageEvent.tick <= to_tick)
+    bucket_expr = (LineageEvent.tick / bucket_size * bucket_size).label("bucket")
+    births_expr = func.sum(case((LineageEvent.event_type == "birth", 1), else_=0)).label("births")
+    deaths_expr = func.sum(case((LineageEvent.event_type == "death", 1), else_=0)).label("deaths")
+
+    stmt = (
+        select(bucket_expr, births_expr, deaths_expr)
+        .where(LineageEvent.tick >= from_tick, LineageEvent.tick <= to_tick)
+        .group_by(literal_column("bucket"))
+        .order_by(literal_column("bucket"))
+    )
     if bot_id is not None:
         stmt = stmt.where(LineageEvent.bot_id == bot_id)
 
     result = await session.execute(stmt)
-    events = result.scalars().all()
+    rows = result.all()
 
-    # Aggregate into buckets.
-    birth_counts: dict[int, int] = {}
-    death_counts: dict[int, int] = {}
     total_births = 0
     total_deaths = 0
-
-    for e in events:
-        bucket = (e.tick // bucket_size) * bucket_size
-        if e.event_type == "birth":
-            birth_counts[bucket] = birth_counts.get(bucket, 0) + 1
-            total_births += 1
-        elif e.event_type == "death":
-            death_counts[bucket] = death_counts.get(bucket, 0) + 1
-            total_deaths += 1
-
-    all_buckets = sorted(set(birth_counts.keys()) | set(death_counts.keys()))
-    buckets = [
-        TickBucket(
-            tick_bucket=b,
-            births=birth_counts.get(b, 0),
-            deaths=death_counts.get(b, 0),
-        )
-        for b in all_buckets
-    ]
+    buckets: list[TickBucket] = []
+    for row in rows:
+        b = int(row[0])
+        births = int(row[1])
+        deaths = int(row[2])
+        total_births += births
+        total_deaths += deaths
+        buckets.append(TickBucket(tick_bucket=b, births=births, deaths=deaths))
 
     return StatsResponse(buckets=buckets, total_births=total_births, total_deaths=total_deaths)

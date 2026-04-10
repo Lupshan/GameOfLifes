@@ -8,13 +8,20 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.bots.schemas import BotCreateRequest, BotDetailResponse, BotResponse, CompileErrorResponse
-from app.bots.service import create_bot, get_bot, get_latest_version, list_user_bots, publish_bot
+from app.bots.service import (
+    create_bot,
+    get_bot,
+    get_latest_version,
+    get_latest_versions_bulk,
+    list_user_bots,
+    publish_bot,
+)
 from app.db.engine import get_session
 from app.db.models import User
 from app.deps import current_user
 
-MAX_BOTS_PER_USER = 10
-MAX_SOURCE_SIZE = 10240  # 10 KB
+MAX_BOTS_PER_USER = 10  # Hard cap to prevent abuse; one user shouldn't flood the world.
+MAX_SOURCE_SIZE = 10240  # 10 KB — keeps compilation fast and bytecode bounded.
 
 router = APIRouter(prefix="/bots", tags=["bots"])
 
@@ -65,9 +72,12 @@ async def list_bots(
     session: AsyncSession = Depends(get_session),
 ) -> list[BotResponse]:
     bots = await list_user_bots(user.id, session)
+    if not bots:
+        return []
+    versions = await get_latest_versions_bulk([b.id for b in bots], session)
     results: list[BotResponse] = []
     for bot in bots:
-        version = await get_latest_version(bot.id, session)
+        version = versions.get(bot.id)
         compile_ok = version.compile_ok if version else False
         compile_errors = version.compile_errors if version else None
         results.append(_bot_response(bot, compile_ok, compile_errors))
@@ -106,7 +116,15 @@ async def publish(
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_session),
 ) -> BotResponse:
-    bot = await get_bot(bot_id, session)
+    from sqlalchemy import select as sa_select
+
+    from app.db.models import Bot as BotModel
+
+    # Lock the bot row to prevent concurrent publish races.
+    result = await session.execute(
+        sa_select(BotModel).where(BotModel.id == bot_id).with_for_update()
+    )
+    bot = result.scalars().first()
     if bot is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Bot not found")
     if bot.user_id != user.id:

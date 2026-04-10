@@ -13,13 +13,10 @@ void BytecodeBrain::tick(Agent& agent, World& world) {
         vm_.reset_for_tick();
     }
 
-    // Find agent index in the world's agent vector.
-    std::size_t agent_index = 0;
-    for (std::size_t i = 0; i < world.agents().size(); ++i) {
-        if (world.agents()[i].id == agent.id) {
-            agent_index = i;
-            break;
-        }
+    // O(1) agent index lookup via cached map (rebuilt each tick).
+    std::size_t agent_index = world.agent_index_by_id(agent.id);
+    if (agent_index == SIZE_MAX) {
+        return; // agent removed mid-tick
     }
 
     AgentIntrinsicHandler handler(agent_index, world);

@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+import asyncio
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from slowapi import _rate_limit_exceeded_handler
@@ -32,11 +35,29 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     setup_logging(settings.debug)
 
+    _prune_logger = logging.getLogger("app.prune")
+
+    async def _periodic_prune(interval: int = 3600, keep_days: int = 7) -> None:
+        """Prune old snapshots every `interval` seconds."""
+        from app.snapshots.service import prune
+
+        snap_dir = Path("snapshots")
+        while True:
+            await asyncio.sleep(interval)
+            try:
+                deleted = await prune(snap_dir, keep_days)
+                if deleted > 0:
+                    _prune_logger.info("Pruned %d snapshots", deleted)
+            except Exception:
+                _prune_logger.exception("Snapshot pruning failed")
+
     @asynccontextmanager
     async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         init_db(settings)  # type: ignore[arg-type]
         await create_tables()
+        prune_task = asyncio.create_task(_periodic_prune())
         yield
+        prune_task.cancel()
 
     from app.middleware.rate_limit import limiter
 

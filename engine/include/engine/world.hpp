@@ -8,6 +8,7 @@
 #include "engine/world_config.hpp"
 
 #include <cstdint>
+#include <unordered_map>
 #include <vector>
 
 namespace gol {
@@ -49,6 +50,17 @@ class World {
 
     Rng& rng() noexcept;
 
+    // Rebuild per-cell agent counts and agent-id-to-index map.
+    // Call once at the start of each tick before agent stepping.
+    void rebuild_caches();
+
+    // O(1) agent count at a cell (valid after rebuild_caches).
+    int agent_count_at(Position p) const;
+
+    // O(1) agent index lookup by ID (valid after rebuild_caches).
+    // Returns the index or SIZE_MAX if not found.
+    std::size_t agent_index_by_id(std::uint64_t id) const;
+
   private:
     WorldConfig config_;
     Grid<Terrain> terrain_;
@@ -56,6 +68,8 @@ class World {
     Grid<std::uint8_t> water_;
     Grid<std::uint8_t> mineral_;
     std::vector<Agent> agents_;
+    Grid<int> agent_counts_;
+    std::unordered_map<std::uint64_t, std::size_t> agent_index_map_;
     Rng rng_;
     std::uint64_t tick_count_;
     std::uint64_t next_id_;

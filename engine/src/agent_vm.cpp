@@ -33,12 +33,7 @@ VmStatus AgentIntrinsicHandler::handle_perceive(Vm& vm) {
     int food_val = world_.food().at(p);
     int water_val = world_.water().at(p);
 
-    int agents_here = 0;
-    for (const auto& other : world_.agents()) {
-        if (other.alive && other.pos == p) {
-            ++agents_here;
-        }
-    }
+    int agents_here = world_.agent_count_at(p);
 
     vm.push(terrain_val);
     vm.push(food_val);
@@ -56,12 +51,7 @@ VmStatus AgentIntrinsicHandler::handle_look(Vm& vm) {
     int food_val = world_.food().at(target);
     int water_val = world_.water().at(target);
 
-    int agents_there = 0;
-    for (const auto& other : world_.agents()) {
-        if (other.alive && other.pos == target) {
-            ++agents_there;
-        }
-    }
+    int agents_there = world_.agent_count_at(target);
 
     vm.push(terrain_val);
     vm.push(food_val);

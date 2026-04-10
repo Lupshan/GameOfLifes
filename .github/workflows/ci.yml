@@ -128,5 +128,7 @@ jobs:
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
       - run: cd frontend && npm ci
+      - name: Prettier check
+        run: cd frontend && npx prettier --check .
       - run: cd frontend && npm run build
       - run: cd frontend && npm run test

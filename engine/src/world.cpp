@@ -5,7 +5,8 @@ namespace gol {
 World::World(const WorldConfig& config)
     : config_(config), terrain_(config.width, config.height, Terrain::Plain),
       food_(config.width, config.height, 0), water_(config.width, config.height, 0),
-      mineral_(config.width, config.height, 0), rng_(config.seed), tick_count_(0), next_id_(0) {
+      mineral_(config.width, config.height, 0), agent_counts_(config.width, config.height, 0),
+      rng_(config.seed), tick_count_(0), next_id_(0) {
 }
 
 void World::init() {
@@ -79,7 +80,7 @@ std::uint64_t World::spawn_agent(Position pos, int energy, const Genome& genome)
     a.genome = genome;
     a.parent_id = NO_PARENT;
     a.generation = 0;
-    a.hydration = config_.starting_energy; // start with full hydration
+    a.hydration = config_.starting_hydration;
     agents_.push_back(a);
     return id;
 }
@@ -98,9 +99,41 @@ std::uint64_t World::spawn_child(Position pos,
     a.genome = genome;
     a.parent_id = parent_id;
     a.generation = generation;
-    a.hydration = energy; // child starts with hydration = energy
+    a.hydration = energy; // child inherits half parent's hydration proportional to energy
     agents_.push_back(a);
     return id;
+}
+
+void World::rebuild_caches() {
+    // Zero out agent count grid.
+    for (int y = 0; y < config_.height; ++y) {
+        for (int x = 0; x < config_.width; ++x) {
+            agent_counts_.set(Position{x, y}, 0);
+        }
+    }
+
+    agent_index_map_.clear();
+    agent_index_map_.reserve(agents_.size());
+
+    for (std::size_t i = 0; i < agents_.size(); ++i) {
+        const auto& a = agents_[i];
+        agent_index_map_[a.id] = i;
+        if (a.alive) {
+            agent_counts_.at(a.pos) += 1;
+        }
+    }
+}
+
+int World::agent_count_at(Position p) const {
+    return agent_counts_.at(p);
+}
+
+std::size_t World::agent_index_by_id(std::uint64_t id) const {
+    auto it = agent_index_map_.find(id);
+    if (it != agent_index_map_.end()) {
+        return it->second;
+    }
+    return SIZE_MAX;
 }
 
 const std::vector<Agent>& World::agents() const noexcept {

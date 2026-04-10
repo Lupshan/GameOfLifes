@@ -1,8 +1,12 @@
-"""Auth endpoints: signup, login, me."""
+"""Auth endpoints: signup, login, logout, me.
+
+Tokens are delivered via httpOnly cookies (Secure, SameSite=Lax) to mitigate
+XSS token theft.  The JSON body still echoes the token for non-browser clients.
+"""
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,10 +19,26 @@ from app.deps import current_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
+_COOKIE_NAME = "gol_token"
+_COOKIE_MAX_AGE = 7 * 24 * 3600  # 7 days, matches jwt_expire_days
+
+
+def _set_token_cookie(response: Response, token: str, settings: Settings) -> None:
+    response.set_cookie(
+        key=_COOKIE_NAME,
+        value=token,
+        httponly=True,
+        secure=not settings.debug,
+        samesite="lax",
+        max_age=_COOKIE_MAX_AGE,
+        path="/",
+    )
+
 
 @router.post("/signup", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 async def signup(
     body: SignupRequest,
+    response: Response,
     session: AsyncSession = Depends(get_session),
     settings: Settings = Depends(get_settings),
 ) -> TokenResponse:
@@ -32,12 +52,14 @@ async def signup(
     await session.refresh(user)
 
     token = create_token(user.id, settings)
+    _set_token_cookie(response, token, settings)
     return TokenResponse(access_token=token)
 
 
 @router.post("/login", response_model=TokenResponse)
 async def login(
     body: LoginRequest,
+    response: Response,
     session: AsyncSession = Depends(get_session),
     settings: Settings = Depends(get_settings),
 ) -> TokenResponse:
@@ -47,7 +69,14 @@ async def login(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
     token = create_token(user.id, settings)
+    _set_token_cookie(response, token, settings)
     return TokenResponse(access_token=token)
+
+
+@router.post("/logout")
+async def logout(response: Response) -> dict[str, str]:
+    response.delete_cookie(key=_COOKIE_NAME, path="/")
+    return {"status": "ok"}
 
 
 @router.get("/me", response_model=UserResponse)
