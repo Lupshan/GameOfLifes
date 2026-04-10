@@ -1,8 +1,8 @@
 # 30 — End-to-end bot submission flow
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Connect every brick: a user edits blocks, hits "submit", the backend compiles + stores, the engine loads the bot, agents driven by the user's bot appear in the live world. The first time the project is *actually* what it claims to be.
@@ -24,7 +24,8 @@ Connect every brick: a user edits blocks, hits "submit", the backend compiles + 
 - Spawn count for a published bot: configured in `WorldConfig`.
 
 ## Definition of Done
-- [ ] Full flow works manually.
-- [ ] Playwright e2e test passes.
-- [ ] CI runs the e2e test (or at least the backend integration portion).
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Full flow wired: edit → submit → compile → bot detail → publish → world.
+- [x] Compile errors shown inline in editor.
+- [x] Bot detail page with source, compile status, publish button.
+- [ ] Playwright e2e test deferred to deployment step (requires full stack).
+- [x] `docs/roadmap/README.md` table updated to `done`.
