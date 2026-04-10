@@ -1,8 +1,8 @@
 # 21 — User auth
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Add account management so users can sign up, log in, and obtain a token used to authenticate later bot submissions.
@@ -27,7 +27,7 @@ Add account management so users can sign up, log in, and obtain a token used to 
 - Strict pyright; no `Any` in auth code paths.
 
 ## Definition of Done
-- [ ] All endpoints implemented + tested.
-- [ ] Argon2 password hashing.
-- [ ] `current_user` dependency works.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] All endpoints implemented + tested (signup, login, me — 12 tests).
+- [x] Argon2 password hashing (argon2-cffi direct, ADR 012).
+- [x] `current_user` dependency works (JWT Bearer → DB lookup).
+- [x] `docs/roadmap/README.md` table updated to `done`.

@@ -10,6 +10,8 @@ dependencies = [
     "sqlmodel>=0.0.22,<0.1",
     "alembic>=1.14,<1.15",
     "aiosqlite>=0.20,<0.21",
+    "pyjwt>=2.9,<2.10",
+    "argon2-cffi>=23.1,<24.0",
 ]
 
 [dependency-groups]
@@ -27,6 +29,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["B008"]  # Depends() in defaults is standard FastAPI pattern
 
 [tool.pyright]
 pythonVersion = "3.12"

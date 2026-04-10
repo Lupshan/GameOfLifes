@@ -7,6 +7,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from app.auth.router import router as auth_router
 from app.config import Settings, get_settings
 from app.db.engine import create_tables, init_db
 from app.health.router import router as health_router
@@ -24,6 +25,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     app = FastAPI(title=settings.app_name, debug=settings.debug, lifespan=lifespan)
     app.include_router(health_router)
+    app.include_router(auth_router)
     return app
 
 
