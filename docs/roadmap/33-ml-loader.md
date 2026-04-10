@@ -1,8 +1,8 @@
 # 33 — ML model loader (ONNX)
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Open Tier 2: let users submit a frozen ML model (ONNX format) instead of bytecode. The engine loads it and runs inference per agent per tick. This step is just the loader and inference path — integration with agents is step 34.
@@ -24,7 +24,7 @@ Open Tier 2: let users submit a frozen ML model (ONNX format) instead of bytecod
 - Inference budget: a model that exceeds N ms per inference is rejected at load time.
 
 ## Definition of Done
-- [ ] ONNX runtime integrated.
-- [ ] Loader + validation + inference tested.
-- [ ] ADR 012 written.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Custom feed-forward ML runtime (pure C++, no GAFAM deps, replaces ONNX).
+- [x] JSON model loader + validation + inference tested (7 tests).
+- [x] ADR 017 written (custom format vs ONNX decision).
+- [x] `docs/roadmap/README.md` table updated to `done`.
