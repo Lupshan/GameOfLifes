@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class BotCreateRequest(BaseModel):
-    name: str
+    name: str = Field(min_length=1, max_length=100)
     source: str = ""
     kind: str = "bytecode"  # "bytecode" or "ml"
     model: str | None = None  # JSON model definition for kind=ml

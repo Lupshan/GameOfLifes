@@ -342,23 +342,17 @@ def _emit_expr(
             for op in extract_ops:
                 em.emit_u8(op)
         elif expr.name in INTRINSIC_MAP:
-            # Emit args first (for my_trait).
-            for arg in expr.args:
-                _emit_expr(arg, func, sema, em, func_addrs)
             if expr.name == "my_trait":
-                # my_trait takes an inline u8 operand, not a stack value.
-                # The arg was pushed; we need to handle this differently.
-                # Actually per spec, MY_TRAIT reads an inline u8 operand.
-                # So we need the arg to be a compile-time constant.
+                # my_trait takes an inline u8 operand (compile-time constant),
+                # not a stack value. Don't emit args via _emit_expr.
                 if not isinstance(expr.args[0], IntLit):
                     raise CodegenError("my_trait() argument must be an integer literal")
-                # Remove the pushed value (we already emitted args above — undo).
-                # Simpler: don't emit the arg push, just emit the opcode + inline operand.
-                # Let's redo: remove the last 5 bytes (PUSH_INT + i32).
-                del em.code[-5:]
                 em.emit_u8(MY_TRAIT)
                 em.emit_u8(expr.args[0].value & 0xFF)
             else:
+                # Emit args onto the stack for other intrinsics.
+                for arg in expr.args:
+                    _emit_expr(arg, func, sema, em, func_addrs)
                 em.emit_u8(INTRINSIC_MAP[expr.name])
         elif expr.name in BUILTINS:
             # Should have been handled above.
