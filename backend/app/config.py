@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     debug: bool = False
     host: str = "0.0.0.0"
     port: int = 8000
+    database_url: str = "sqlite+aiosqlite:///./gameoflifes.db"
 
     model_config = {"env_prefix": "GOL_"}
 

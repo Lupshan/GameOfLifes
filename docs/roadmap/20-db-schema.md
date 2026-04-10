@@ -1,8 +1,8 @@
 # 20 — DB schema + migrations
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-09
+**Finished**: 2026-04-10
 
 ## Goal
 Define the persistent data model and a migration tool so schema evolution is tracked from day one.
@@ -24,8 +24,8 @@ Define the persistent data model and a migration tool so schema evolution is tra
 - `bytecode` column is binary blob (the `.gob` file content).
 
 ## Definition of Done
-- [ ] Models defined and migration generated.
-- [ ] `alembic upgrade head` works against fresh SQLite + Postgres.
-- [ ] Tests cover model round-trip via fixtures.
-- [ ] ADR 010 written.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Models defined and migration generated (5 tables: users, bots, bot_versions, snapshots, lineage_events).
+- [x] `alembic upgrade head` works against fresh SQLite.
+- [x] Tests cover model round-trip via in-memory SQLite fixtures.
+- [x] ADR 015 written (SQLite dev / Postgres prod dual support).
+- [x] `docs/roadmap/README.md` table updated to `done`.
