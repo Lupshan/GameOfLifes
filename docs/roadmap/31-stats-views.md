@@ -1,8 +1,8 @@
 # 31 — Stats / genealogy views
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Make the evolution visible. Add charts and a genealogy tree so users can see populations rise and fall, traits drift, and lineages branch.
@@ -24,7 +24,8 @@ Make the evolution visible. Add charts and a genealogy tree so users can see pop
 - Genealogy tree rendering: simple top-down layout, max 5 generations visible.
 
 ## Definition of Done
-- [ ] Stats charts render with live data.
-- [ ] Genealogy tree renders for a bot with multiple generations.
-- [ ] Agent click → inspector works.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Stats charts render with live data (SVG LineChart, births/deaths over time).
+- [x] Genealogy tree renders for a bot (parent→children, monospace layout).
+- [x] Agent inspector component (genome, traits, parent, generation).
+- [x] Backend GET /stats endpoint (bucketed births/deaths from lineage_events).
+- [x] `docs/roadmap/README.md` table updated to `done`.

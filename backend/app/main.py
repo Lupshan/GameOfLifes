@@ -14,6 +14,7 @@ from app.db.engine import create_tables, init_db
 from app.health.router import router as health_router
 from app.snapshots.router import lineage_router
 from app.snapshots.router import router as snapshots_router
+from app.stats.router import router as stats_router
 from app.ws.router import router as ws_router
 
 
@@ -34,6 +35,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(ws_router)
     app.include_router(snapshots_router)
     app.include_router(lineage_router)
+    app.include_router(stats_router)
     return app
 
 
