@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.bots.schemas import BotCreateRequest, BotDetailResponse, BotResponse, CompileErrorResponse
 from app.bots.service import (
     create_bot,
+    delete_bot,
     get_bot,
     get_latest_version,
     get_latest_versions_bulk,
@@ -139,3 +140,18 @@ async def publish(
         )
     await publish_bot(bot, session)
     return _bot_response(bot, version.compile_ok, version.compile_errors)
+
+
+@router.delete("/{bot_id}")
+async def delete(
+    bot_id: str,
+    user: User = Depends(current_user),
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, str]:
+    bot = await get_bot(bot_id, session)
+    if bot is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Bot not found")
+    if bot.user_id != user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not your bot")
+    await delete_bot(bot, session)
+    return {"status": "deleted"}

@@ -20,8 +20,6 @@ class BotCreateRequest(BaseModel):
         return v
 
     source: str = ""
-    kind: str = "bytecode"  # "bytecode" or "ml"
-    model: str | None = None  # JSON model definition for kind=ml
 
 
 class CompileErrorResponse(BaseModel):

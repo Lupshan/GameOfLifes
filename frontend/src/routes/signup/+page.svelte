@@ -7,9 +7,21 @@
 	let error = $state('');
 	let loading = $state(false);
 
+	function validatePassword(pw: string): string | null {
+		if (pw.length < 10) return 'Password must be at least 10 characters';
+		if (!/[0-9]/.test(pw)) return 'Password must contain at least one digit';
+		if (!/[A-Z]/.test(pw)) return 'Password must contain at least one uppercase letter';
+		return null;
+	}
+
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		error = '';
+		const pwError = validatePassword(password);
+		if (pwError) {
+			error = pwError;
+			return;
+		}
 		loading = true;
 		try {
 			await auth.signup(email, password);
@@ -43,8 +55,8 @@
 					type="password"
 					bind:value={password}
 					required
-					minlength="6"
-					placeholder="Min. 6 characters"
+					minlength="10"
+					placeholder="Min. 10 chars, 1 digit, 1 uppercase"
 				/>
 			</div>
 

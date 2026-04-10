@@ -75,8 +75,7 @@ async def get_latest_versions_bulk(
 
     stmt = select(BotVersion).join(
         max_ver,
-        (BotVersion.bot_id == max_ver.c.bot_id)
-        & (BotVersion.version == max_ver.c.max_version),
+        (BotVersion.bot_id == max_ver.c.bot_id) & (BotVersion.version == max_ver.c.max_version),
     )
     result = await session.execute(stmt)
     versions = result.scalars().all()
@@ -86,4 +85,14 @@ async def get_latest_versions_bulk(
 async def publish_bot(bot: Bot, session: AsyncSession) -> None:
     bot.published = True
     session.add(bot)
+    await session.commit()
+
+
+async def delete_bot(bot: Bot, session: AsyncSession) -> None:
+    """Delete a bot and all its versions."""
+    # Delete versions first (FK constraint).
+    versions = await session.execute(select(BotVersion).where(BotVersion.bot_id == bot.id))
+    for v in versions.scalars().all():
+        await session.delete(v)
+    await session.delete(bot)
     await session.commit()

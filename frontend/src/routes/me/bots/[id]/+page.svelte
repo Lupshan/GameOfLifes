@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { getBot, publishBot } from '$lib/api';
+	import { getBot, publishBot, deleteBot } from '$lib/api';
+	import { goto } from '$app/navigation';
 
 	interface BotDetail {
 		id: string;
@@ -37,6 +38,19 @@
 			publishError = err instanceof Error ? err.message : 'Publish failed';
 		} finally {
 			publishing = false;
+		}
+	}
+
+	let deleting = $state(false);
+
+	async function handleDelete() {
+		if (!bot || !confirm('Delete this bot? This cannot be undone.')) return;
+		deleting = true;
+		try {
+			await deleteBot(bot.id);
+			goto('/me/bots');
+		} catch {
+			deleting = false;
 		}
 	}
 </script>
@@ -106,7 +120,12 @@
 			<pre>{bot.source}</pre>
 		</div>
 
-		<a href="/me/bots" class="back-link">&larr; Back to My Bots</a>
+		<div class="actions-bar">
+			<a href="/me/bots" class="back-link">&larr; Back to My Bots</a>
+			<button class="btn-danger" onclick={handleDelete} disabled={deleting}>
+				{deleting ? 'Deleting...' : 'Delete Bot'}
+			</button>
+		</div>
 	{/if}
 </div>
 
@@ -177,6 +196,13 @@
 	.source-section pre {
 		margin-top: var(--sp-3);
 		margin-bottom: 0;
+	}
+
+	.actions-bar {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: var(--sp-6);
 	}
 
 	.back-link {

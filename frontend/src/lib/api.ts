@@ -43,6 +43,15 @@ export async function publishBot(botId: string): Promise<void> {
 	}
 }
 
+/** Delete a bot. */
+export async function deleteBot(botId: string): Promise<void> {
+	const resp = await apiFetch(`/bots/${botId}`, { method: 'DELETE' });
+	if (!resp.ok) {
+		const err = await resp.json();
+		throw new Error(err.detail || 'Failed to delete');
+	}
+}
+
 /** Get bot detail. */
 export async function getBot(botId: string): Promise<{
 	id: string;
