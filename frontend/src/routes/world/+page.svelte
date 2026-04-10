@@ -2,6 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { renderWorld, renderHUD } from '$lib/canvas/renderer';
 	import type { Camera, Snapshot } from '$lib/canvas/types';
+	import { isValidSnapshot } from '$lib/canvas/validate';
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null = null;
@@ -10,6 +11,10 @@
 	let animFrameId: number = 0;
 
 	let camera: Camera = { x: 0, y: 0, zoom: 8 };
+
+	// WS reconnection state.
+	let retryDelay = 1000;
+	let retryCount = 0;
 
 	// Pan state.
 	let dragging = false;
@@ -23,17 +28,29 @@
 		const wsUrl = `${protocol}//${window.location.host}/ws/world`;
 		ws = new WebSocket(wsUrl);
 
+		ws.onopen = () => {
+			retryDelay = 1000;
+		};
+
 		ws.onmessage = (event) => {
 			try {
-				latestSnapshot = JSON.parse(event.data) as Snapshot;
+				const parsed = JSON.parse(event.data);
+				if (isValidSnapshot(parsed)) {
+					latestSnapshot = parsed;
+				}
 			} catch {
 				// Ignore parse errors.
 			}
 		};
 
 		ws.onclose = () => {
-			// Reconnect after 2 seconds.
-			setTimeout(connectWS, 2000);
+			// Exponential backoff with jitter (max 30s, max 10 retries).
+			if (retryCount < 10) {
+				const jitter = Math.random() * 500;
+				setTimeout(connectWS, retryDelay + jitter);
+				retryDelay = Math.min(retryDelay * 2, 30000);
+				retryCount++;
+			}
 		};
 	}
 

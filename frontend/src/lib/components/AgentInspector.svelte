@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { SnapshotAgent } from '$lib/canvas/types';
+	import { NO_PARENT } from '$lib/types/api';
 
 	let { agent, onclose }: { agent: SnapshotAgent; onclose: () => void } = $props();
 
@@ -21,7 +22,7 @@
 		<tr><td>Energy</td><td>{agent.energy}</td></tr>
 		<tr><td>Hydration</td><td>{agent.hydration}</td></tr>
 		<tr><td>Generation</td><td>{agent.generation}</td></tr>
-		<tr><td>Parent</td><td>{agent.parent_id === 18446744073709551615 ? '—' : `#${agent.parent_id}`}</td></tr>
+		<tr><td>Parent</td><td>{BigInt(agent.parent_id) === NO_PARENT ? '—' : `#${agent.parent_id}`}</td></tr>
 		<tr><td>Genome</td><td style="word-break:break-all;font-family:monospace;">{agent.genome}</td></tr>
 	</table>
 
