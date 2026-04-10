@@ -55,7 +55,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 | 20 | DB schema + migrations            | [20-db-schema.md](20-db-schema.md)                            | done        |
 | 21 | User auth                         | [21-user-auth.md](21-user-auth.md)                            | done        |
 | 22 | Bot submission API                | [22-bot-submission-api.md](22-bot-submission-api.md)          | done        |
-| 23 | Engine bridge                     | [23-engine-bridge.md](23-engine-bridge.md)                    | not started |
+| 23 | Engine bridge                     | [23-engine-bridge.md](23-engine-bridge.md)                    | done        |
 | 24 | WebSocket world stream            | [24-websocket-stream.md](24-websocket-stream.md)              | not started |
 | 25 | Snapshot/replay storage API       | [25-replay-api.md](25-replay-api.md)                          | not started |
 

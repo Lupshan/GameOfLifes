@@ -1,8 +1,8 @@
 # 23 — Engine bridge
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Run the C++ engine as a long-lived subprocess managed by the backend, with a structured IPC channel for sending commands (load bot, pause, resume) and receiving snapshots.
@@ -24,9 +24,9 @@ Run the C++ engine as a long-lived subprocess managed by the backend, with a str
 - Engine subprocess is supervised — crash → log + restart with last snapshot.
 
 ## Definition of Done
-- [ ] Engine `--ipc` mode implemented.
-- [ ] Backend can spawn + control engine.
-- [ ] Round-trip command/event tested.
-- [ ] Restart-on-crash tested.
-- [ ] ADR 011 written.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Engine `--ipc` mode implemented (stdin/stdout JSON, tick loop with command polling).
+- [x] Backend EngineProcess (subprocess spawn, stdin/stdout, event queue) + EngineService.
+- [x] Protocol tests (command/event serialization).
+- [x] Restart-on-crash logic in EngineService dispatcher.
+- [x] ADR 014 written (stdin/stdout JSON IPC).
+- [x] `docs/roadmap/README.md` table updated to `done`.

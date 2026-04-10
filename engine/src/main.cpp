@@ -1,3 +1,4 @@
+#include "engine/ipc.hpp"
 #include "engine/lineage_log.hpp"
 #include "engine/simulation.hpp"
 #include "engine/snapshot_json.hpp"
@@ -38,20 +39,27 @@ int main(int argc, char* argv[]) {
     std::filesystem::path config_path = "engine/config/default.toml";
     std::filesystem::path snapshot_dir;
     std::filesystem::path lineage_path;
+    bool ipc_mode = false;
 
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
-        if (arg == "--dump-snapshots" && i + 1 < argc) {
+        if (arg == "--ipc") {
+            ipc_mode = true;
+        } else if (arg == "--dump-snapshots" && i + 1 < argc) {
             snapshot_dir = argv[++i];
         } else if (arg == "--config" && i + 1 < argc) {
             config_path = argv[++i];
         } else if (arg == "--lineage-log" && i + 1 < argc) {
             lineage_path = argv[++i];
         } else {
-            std::cerr << "usage: gameoflifes_engine [--config <path>] "
+            std::cerr << "usage: gameoflifes_engine [--ipc] [--config <path>] "
                          "[--dump-snapshots <dir>] [--lineage-log <path>]\n";
             return EXIT_FAILURE;
         }
+    }
+
+    if (ipc_mode) {
+        return gol::run_ipc_mode(config_path.string());
     }
 
     gol::WorldConfig config = gol::load_world_config(config_path);
