@@ -14,16 +14,16 @@ enum class Terrain : std::uint8_t {
 
 // Movement cost multiplier for each terrain type.
 // Agents spend this many moves to cross a cell.
-int movement_cost(Terrain t);
+int movement_cost(Terrain t) noexcept;
 
 // Food regeneration rate multiplier for each terrain type.
-double food_regen_factor(Terrain t);
+double food_regen_factor(Terrain t) noexcept;
 
 // Water regeneration rate multiplier for each terrain type.
-double water_regen_factor(Terrain t);
+double water_regen_factor(Terrain t) noexcept;
 
 // Mineral regeneration rate multiplier for each terrain type.
-double mineral_regen_factor(Terrain t);
+double mineral_regen_factor(Terrain t) noexcept;
 
 } // namespace gol
 

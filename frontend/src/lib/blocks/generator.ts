@@ -111,9 +111,7 @@ export function createGenerator(): Blockly.CodeGenerator {
 		return [`${a} ${op} ${b}`, ORDER_NONE];
 	};
 
-	(gen as unknown as Record<string, BlockCodeFn>)['logic_compare'] = (
-		block
-	): [string, number] => {
+	(gen as unknown as Record<string, BlockCodeFn>)['logic_compare'] = (block): [string, number] => {
 		const ops: Record<string, string> = {
 			EQ: '==',
 			NEQ: '!=',
@@ -137,16 +135,12 @@ export function createGenerator(): Blockly.CodeGenerator {
 		return [`${a} ${op} ${b}`, ORDER_NONE];
 	};
 
-	(gen as unknown as Record<string, BlockCodeFn>)['logic_negate'] = (
-		block
-	): [string, number] => {
+	(gen as unknown as Record<string, BlockCodeFn>)['logic_negate'] = (block): [string, number] => {
 		const val = gen.valueToCode(block, 'BOOL', ORDER_NONE) || 'false';
 		return [`!${val}`, ORDER_NONE];
 	};
 
-	(gen as unknown as Record<string, BlockCodeFn>)['logic_boolean'] = (
-		block
-	): [string, number] => {
+	(gen as unknown as Record<string, BlockCodeFn>)['logic_boolean'] = (block): [string, number] => {
 		return [block.getFieldValue('BOOL') === 'TRUE' ? 'true' : 'false', ORDER_ATOMIC];
 	};
 

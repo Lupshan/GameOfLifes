@@ -2,7 +2,7 @@
 
 namespace gol {
 
-int movement_cost(Terrain t) {
+int movement_cost(Terrain t) noexcept {
     switch (t) {
     case Terrain::Plain:
         return 1;
@@ -16,7 +16,7 @@ int movement_cost(Terrain t) {
     return 1;
 }
 
-double food_regen_factor(Terrain t) {
+double food_regen_factor(Terrain t) noexcept {
     switch (t) {
     case Terrain::Plain:
         return 1.0;
@@ -30,7 +30,7 @@ double food_regen_factor(Terrain t) {
     return 1.0;
 }
 
-double water_regen_factor(Terrain t) {
+double water_regen_factor(Terrain t) noexcept {
     switch (t) {
     case Terrain::Plain:
         return 0.5;
@@ -44,7 +44,7 @@ double water_regen_factor(Terrain t) {
     return 0.5;
 }
 
-double mineral_regen_factor(Terrain t) {
+double mineral_regen_factor(Terrain t) noexcept {
     switch (t) {
     case Terrain::Plain:
         return 0.3;

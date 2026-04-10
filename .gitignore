@@ -37,6 +37,11 @@ dist/
 *.swo
 .DS_Store
 
+# Secrets
+.env
+.env.local
+.env.production
+
 # Project
 *.gob
 *.snapshot

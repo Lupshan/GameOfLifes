@@ -99,7 +99,7 @@ std::uint64_t World::spawn_child(Position pos,
     a.genome = genome;
     a.parent_id = parent_id;
     a.generation = generation;
-    a.hydration = energy; // child inherits half parent's hydration proportional to energy
+    a.hydration = config_.starting_hydration;
     agents_.push_back(a);
     return id;
 }

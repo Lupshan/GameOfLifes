@@ -16,8 +16,8 @@ This starts: PostgreSQL, engine (IPC mode), backend (FastAPI), frontend (nginx),
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `POSTGRES_PASSWORD` | `changeme` | PostgreSQL password |
-| `JWT_SECRET` | `change-me-in-production` | JWT signing secret |
+| `POSTGRES_PASSWORD` | *(required, no default)* | PostgreSQL password |
+| `JWT_SECRET` | *(required, no default)* | JWT signing secret |
 | `GOL_DATABASE_URL` | (set in compose) | Async database URL |
 | `GOL_DEBUG` | `false` | Enable debug logging |
 

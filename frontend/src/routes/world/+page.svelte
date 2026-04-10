@@ -14,6 +14,7 @@
 
 	let retryDelay = 1000;
 	let retryCount = 0;
+	let connectionFailed = false;
 
 	let dragging = false;
 	let dragStartX = 0;
@@ -47,6 +48,8 @@
 				setTimeout(connectWS, retryDelay + jitter);
 				retryDelay = Math.min(retryDelay * 2, 30000);
 				retryCount++;
+			} else {
+				connectionFailed = true;
 			}
 		};
 	}
@@ -70,7 +73,11 @@
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 			ctx.fillStyle = '#64748b';
 			ctx.font = '16px Inter, system-ui, sans-serif';
-			ctx.fillText('Connecting to world...', 20, 40);
+			if (connectionFailed) {
+				ctx.fillText('Connection lost. Please refresh the page.', 20, 40);
+			} else {
+				ctx.fillText('Connecting to world...', 20, 40);
+			}
 		}
 
 		animFrameId = requestAnimationFrame(renderLoop);

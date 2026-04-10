@@ -9,6 +9,7 @@ export function isValidSnapshot(obj: unknown): obj is Snapshot {
 		typeof o.tick === 'number' &&
 		typeof o.width === 'number' &&
 		typeof o.height === 'number' &&
+		typeof o.seed === 'number' &&
 		Array.isArray(o.agents) &&
 		typeof o.food === 'string' &&
 		typeof o.water === 'string' &&

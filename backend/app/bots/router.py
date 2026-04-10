@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import select as sa_select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.bots.schemas import BotCreateRequest, BotDetailResponse, BotResponse, CompileErrorResponse
@@ -18,6 +19,7 @@ from app.bots.service import (
     publish_bot,
 )
 from app.db.engine import get_session
+from app.db.models import Bot as BotModel
 from app.db.models import User
 from app.deps import current_user
 
@@ -27,10 +29,7 @@ MAX_SOURCE_SIZE = 10240  # 10 KB — keeps compilation fast and bytecode bounded
 router = APIRouter(prefix="/bots", tags=["bots"])
 
 
-def _bot_response(bot: object, compile_ok: bool, compile_errors: str | None) -> BotResponse:
-    from app.db.models import Bot as BotModel
-
-    assert isinstance(bot, BotModel)
+def _bot_response(bot: BotModel, compile_ok: bool, compile_errors: str | None) -> BotResponse:
     errors = None
     if compile_errors:
         raw = json.loads(compile_errors)
@@ -120,10 +119,6 @@ async def publish(
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_session),
 ) -> BotResponse:
-    from sqlalchemy import select as sa_select
-
-    from app.db.models import Bot as BotModel
-
     # Lock the bot row to prevent concurrent publish races.
     result = await session.execute(
         sa_select(BotModel).where(BotModel.id == bot_id).with_for_update()

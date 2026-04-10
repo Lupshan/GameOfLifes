@@ -29,7 +29,8 @@ export async function createBot(
 		body: JSON.stringify({ name, source })
 	});
 	if (!resp.ok && resp.status !== 201) {
-		throw new Error('Failed to create bot');
+		const err = await resp.json().catch(() => ({}));
+		throw new Error(err.detail || 'Failed to create bot');
 	}
 	return resp.json();
 }

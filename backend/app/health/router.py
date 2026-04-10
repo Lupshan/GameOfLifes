@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.engine import get_session
@@ -19,7 +20,7 @@ async def health(session: AsyncSession = Depends(get_session)) -> dict[str, obje
     try:
         await session.execute(text("SELECT 1"))
         checks["db"] = "ok"
-    except Exception:
+    except (SQLAlchemyError, OSError):
         checks["db"] = "error"
         checks["status"] = "degraded"
 
