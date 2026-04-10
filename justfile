@@ -15,8 +15,12 @@ build-engine:
         echo "engine/CMakeLists.txt not present yet — skipping build (see roadmap step 03)." ; \
     fi
 
+# Build the frontend
+build-frontend:
+    cd frontend && npm run build
+
 # Build everything that needs building
-build: build-engine
+build: build-engine build-frontend
 
 # --- test ---
 
@@ -37,13 +41,22 @@ test-backend:
     cd backend && uv run pytest
 
 # Run all tests
-test: test-engine test-bytecode test-backend
+# Run frontend tests
+test-frontend:
+    cd frontend && npm run test
+
+# Run all tests
+test: test-engine test-bytecode test-backend test-frontend
 
 # --- run ---
 
 # Start the simulation engine
 run: build-engine
     ./engine/build/gameoflifes_engine
+
+# Start the frontend dev server
+dev-frontend:
+    cd frontend && npm run dev
 
 # Start the backend dev server
 run-backend:

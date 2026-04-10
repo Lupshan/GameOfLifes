@@ -1,8 +1,8 @@
 # 26 — Frontend skeleton
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 Stand up the SvelteKit project with build, test, lint, and a single placeholder page. Mirrors steps 03 and 19 — boring but necessary.
@@ -25,7 +25,7 @@ Stand up the SvelteKit project with build, test, lint, and a single placeholder 
 - No CSS framework yet (decide in step 27 once we know what we need).
 
 ## Definition of Done
-- [ ] `just dev-frontend` serves the placeholder page.
-- [ ] `just test-frontend` passes.
-- [ ] CI frontend job green.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] `just dev-frontend` serves the placeholder page.
+- [x] `just test-frontend` passes (Vitest smoke test).
+- [x] CI frontend job added (Node 20, npm ci, build, test).
+- [x] `docs/roadmap/README.md` table updated to `done`.

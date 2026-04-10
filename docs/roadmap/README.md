@@ -63,7 +63,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 
 | #  | Step                              | File                                                          | Status      |
 |----|-----------------------------------|---------------------------------------------------------------|-------------|
-| 26 | Frontend skeleton                 | [26-frontend-skeleton.md](26-frontend-skeleton.md)            | not started |
+| 26 | Frontend skeleton                 | [26-frontend-skeleton.md](26-frontend-skeleton.md)            | done        |
 | 27 | World viewer (canvas)             | [27-world-viewer.md](27-world-viewer.md)                      | not started |
 | 28 | Auth + bot management UI          | [28-auth-ui.md](28-auth-ui.md)                                | not started |
 | 29 | Blockly block editor              | [29-block-editor.md](29-block-editor.md)                      | not started |
