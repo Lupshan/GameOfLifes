@@ -57,6 +57,8 @@ add_library(engine_core STATIC
     src/ml_runtime.cpp
     src/brain_bytecode.cpp
     src/brain_ml.cpp
+    src/reserve.cpp
+    src/brain_learning.cpp
 )
 target_include_directories(engine_core PUBLIC include)
 target_link_libraries(engine_core PUBLIC tomlplusplus::tomlplusplus nlohmann_json::nlohmann_json)

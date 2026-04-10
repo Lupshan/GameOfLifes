@@ -17,6 +17,7 @@ add_executable(engine_tests
     test_agent_vm.cpp
     test_ml_runtime.cpp
     test_brain.cpp
+    test_reserve.cpp
 )
 target_link_libraries(engine_tests PRIVATE engine_core doctest::doctest)
 
