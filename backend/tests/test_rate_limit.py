@@ -2,18 +2,15 @@
 
 from __future__ import annotations
 
-import os
 from collections.abc import AsyncIterator
 
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-# Enable rate limiting for this test module.
-os.environ["GOL_RATE_LIMIT"] = "1"
-
 from app.config import Settings
 from app.db.engine import create_tables, init_db
 from app.main import create_app
+from app.middleware.rate_limit import limiter
 
 
 @pytest.fixture
@@ -22,10 +19,15 @@ async def limited_client() -> AsyncIterator[AsyncClient]:
     init_db(settings)
     await create_tables()
 
+    # Force-enable the limiter for this test (conftest disables it globally).
+    limiter.enabled = True
+
     app = create_app(settings)
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
+
+    limiter.enabled = False
 
 
 async def test_rate_limit_returns_429(limited_client: AsyncClient) -> None:
