@@ -1,8 +1,8 @@
 # 29 — Blockly block editor
 
-**Status**: not started
-**Started**: —
-**Finished**: —
+**Status**: done
+**Started**: 2026-04-10
+**Finished**: 2026-04-10
 
 ## Goal
 The Tier 1 entry point for non-coders: a Blockly visual editor that produces source code in the in-house language. After this step, a user can drag blocks, generate source, and preview it.
@@ -24,7 +24,8 @@ The Tier 1 entry point for non-coders: a Blockly visual editor that produces sou
 - Generator is a one-pass tree walker mirroring Blockly's API.
 
 ## Definition of Done
-- [ ] Custom block set covers all language features.
-- [ ] Blocks generate valid source for several sample programs.
-- [ ] Workspace persists in localStorage.
-- [ ] `docs/roadmap/README.md` table updated to `done`.
+- [x] Custom block set covers all language features (actions, perception, control, variables, math).
+- [x] Blocks generate valid GoL Script source via custom CodeGenerator.
+- [x] Workspace persists in localStorage (JSON serialization).
+- [x] ADR 013 written (Blockly despite Google origin).
+- [x] `docs/roadmap/README.md` table updated to `done`.

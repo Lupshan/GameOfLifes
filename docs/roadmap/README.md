@@ -66,7 +66,7 @@ Every step has its own detail file in this folder (`NN-slug.md`) ending with a *
 | 26 | Frontend skeleton                 | [26-frontend-skeleton.md](26-frontend-skeleton.md)            | done        |
 | 27 | World viewer (canvas)             | [27-world-viewer.md](27-world-viewer.md)                      | done        |
 | 28 | Auth + bot management UI          | [28-auth-ui.md](28-auth-ui.md)                                | done        |
-| 29 | Blockly block editor              | [29-block-editor.md](29-block-editor.md)                      | not started |
+| 29 | Blockly block editor              | [29-block-editor.md](29-block-editor.md)                      | done        |
 | 30 | End-to-end bot submission flow    | [30-submission-flow.md](30-submission-flow.md)                | not started |
 | 31 | Stats / genealogy views           | [31-stats-views.md](31-stats-views.md)                        | not started |
 | 32 | Replay viewer                     | [32-replay-viewer.md](32-replay-viewer.md)                    | not started |
