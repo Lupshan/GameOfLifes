@@ -17,7 +17,7 @@ COPY backend/app/ ./app/
 COPY backend/alembic.ini ./
 COPY backend/alembic/ ./alembic/
 
-RUN groupadd -g 1000 gol && useradd -u 1000 -g gol -m gol
+RUN groupadd -g 1001 gol && useradd -u 1001 -g gol -m gol
 USER gol
 
 EXPOSE 8000
