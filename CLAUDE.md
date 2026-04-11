@@ -30,45 +30,11 @@ Frontend (Svelte) ──WS──► Backend (Python/FastAPI) ──┬──► 
 
 ## Repo layout
 
-```
-GameOfLifes/
-├── justfile                 # unified commands: just build/test/run/fmt
-├── CLAUDE.md                # this file
-├── .clang-format
-├── .gitignore
-│
-├── engine/                  # C++ sim engine
-│   ├── CMakeLists.txt
-│   ├── include/engine/      # public headers
-│   ├── src/                 # .cpp + private .hpp
-│   └── tests/               # unit + functional tests
-│
-├── bytecode/                # custom language + bytecode + compiler
-│   ├── spec/                # language grammar, bytecode opcodes, semantics
-│   ├── compiler/            # source → bytecode (Python)
-│   └── tests/
-│
-├── backend/                 # FastAPI app
-│   ├── pyproject.toml
-│   ├── app/
-│   └── tests/
-│
-├── frontend/                # Svelte (added later)
-│
-└── docs/
-    └── adr/                 # Architecture Decision Records (numbered)
-```
+`engine/` (C++), `bytecode/` (Python compiler + specs), `backend/` (FastAPI), `frontend/` (Svelte), `docs/adr/` (ADRs), `justfile` (task runner).
 
 ## Build & commands
 
-All day-to-day commands go through `just` (the project task runner). `just` calls into CMake / pytest / etc. under the hood. Add a recipe to `justfile` whenever a new common command appears — never document a raw command in two places.
-
-Common recipes (to be filled in as the project grows):
-- `just build` — build everything that needs building
-- `just test` — run all tests (engine + bytecode + backend)
-- `just run` — start the simulation
-- `just fmt` — format all code (clang-format + ruff)
-- `just lint` — run linters
+All day-to-day commands go through `just` (the project task runner). Read the `justfile` for available recipes. Add a recipe to `justfile` whenever a new common command appears — never document a raw command in two places.
 
 ## C++ rules (engine)
 
@@ -138,6 +104,25 @@ Concretely:
 - **Don't refactor** code that is unrelated to the current task spontaneously.
 - **Stop and ask only when**: blocked by a missing piece of info, or about to invent a **game rule / mechanic** (world dynamics, agent abilities, genetics rules, victory conditions if any, etc.) — the user keeps full control on the game design itself.
 
+## Docker / deploy
+
+- `docker-compose.yml` (prod) and `docker-compose.dev.yml` (dev). Each brick has its own `Dockerfile`.
+- For local dev without Docker, use `just` recipes directly.
+
+## Git workflow
+
+- **Branches**: `main` (release-ready) ← `staging` (integration) ← feature branches (`feat/`, `fix/`, `chore/`).
+- Every feature branches off `staging` and merges back into `staging` via PR. To release, merge `staging` into `main`.
+- **CI must be green** before any merge — no exceptions.
+- Conventional Commits for messages. Rebase before merge to keep history linear.
+
+## Frontend rules (Svelte / SvelteKit)
+
+- **Framework**: SvelteKit with file-based routing (`src/routes/`).
+- **Components**: `PascalCase.svelte`. Reusable components in `src/lib/components/`, domain-specific in `src/lib/` subfolders (e.g. `canvas/`, `charts/`).
+- **No global CSS frameworks**. Scoped styles in components.
+- **Tests required** same as other bricks. Framework: `vitest` + `@testing-library/svelte` if needed.
+
 ## Glossary
 
 - **World**: the persistent simulated environment, toroidal grid.
@@ -150,10 +135,3 @@ Concretely:
 - **Gene**: the underlying encoding of a trait, subject to mutation across generations.
 - **Reserve** (v2): a dedicated region of the world where live-learning bots are allowed under quota.
 - **Snapshot**: a serialized world state, used for replays and persistence.
-
-## Key decisions (see `docs/adr/`)
-
-- 001 — Four-brick architecture
-- 002 — Custom in-house bytecode (no embedded Lua/WASM/Python)
-- 003 — Hybrid AI tiers (logic + frozen ML in v1, live learning in v2)
-- 004 — No external network clients; all execution is in-engine VM
